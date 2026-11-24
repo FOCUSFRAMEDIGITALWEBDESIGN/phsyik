@@ -21,6 +21,7 @@ KARTBAHN – SCHNELLANLEITUNG
 
 BEFEHLE
   Spieler:  /kartleave  – Rennen / Zeitfahren / Lobby verlassen
+            /kartreset  – Kart auf letzten Checkpoint zurücksetzen
   Editor (kart.admin):
     /kartedit [id]   Editor starten / Strecke laden
     /kartcp [breite] Checkpoint (CP 1 = Start/Ziel)
@@ -29,6 +30,7 @@ BEFEHLE
     /kartboost       Boost-Feld
     /kartitem        Item-Box
     /kartpodium      Siegerpodest
+    /kartplatform [h] Angehobene Strecke an/aus
     /kartundo  /kartlaps <n>  /kartbarriers
     /kartsave <id> [Name]   /kartcancel
 

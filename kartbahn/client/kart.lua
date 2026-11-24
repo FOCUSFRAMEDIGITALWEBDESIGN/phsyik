@@ -1,11 +1,19 @@
--- Eigenes Kart "KB-1": Physik, Tempolimit und Optik beim Spawn setzen
+-- Eigenes Kart "KB-1": Physik (Preset), Tempolimit und Optik beim Spawn setzen
+function GetKartPreset()
+    return Config.KartPresets[Config.Kart.Preset] or Config.KartPresets.sport
+end
+
 function ApplyKartSetup(veh, number, color)
     local k = Config.Kart
     if not k or not k.Enabled or not DoesEntityExist(veh) then return end
-    for field, value in pairs(k.Handling) do
+    local p = GetKartPreset()
+    for field, value in pairs(p.Handling) do
         SetVehicleHandlingFloat(veh, 'CHandlingData', field, value + 0.0)
     end
-    SetVehicleMaxSpeed(veh, k.MaxSpeed / 3.6)
+    if p.CenterOfMass then
+        SetVehicleHandlingVector(veh, 'CHandlingData', 'vecCentreOfMassOffset', p.CenterOfMass)
+    end
+    SetVehicleMaxSpeed(veh, p.MaxSpeed / 3.6)
     ModifyVehicleTopSpeed(veh, 1.0)
     SetVehicleModKit(veh, 0)
     SetVehicleColours(veh, color or k.Colors.primary, k.Colors.secondary)

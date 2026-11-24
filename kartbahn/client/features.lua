@@ -222,7 +222,7 @@ function FeatTick(R, ped, veh, pc)
 
     -- Leistung anwenden (muss jeden Frame gesetzt werden)
     local power = 1.0
-    local maxSpeed = Config.Kart.MaxSpeed
+    local maxSpeed = GetKartPreset().MaxSpeed
     if t < F.penaltyUntil then
         power = 0.25
     elseif t < F.boostUntil then

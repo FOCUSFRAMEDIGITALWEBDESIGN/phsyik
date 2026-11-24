@@ -47,6 +47,9 @@ function Tracks.Sanitize(t)
     if type(t.podium) == 'table' then
         out.podium = { x = num(t.podium.x, 0.0), y = num(t.podium.y, 0.0), z = num(t.podium.z, 0.0), h = num(t.podium.h, 0.0) }
     end
+    if type(t.platform) == 'table' and t.platform.enabled then
+        out.platform = { enabled = true, raise = num(t.platform.raise, Config.Platform.DefaultRaise) }
+    end
     if #out.checkpoints < 3 or #out.grid < 1 then return nil end
     return out
 end

@@ -22,29 +22,54 @@ Config.KartPlate = 'KART'
 Config.Kart = {
     Enabled   = true,
     Name      = 'KB-1 Rennkart',
-    MaxSpeed  = 95.0,          -- km/h Höchstgeschwindigkeit (für alle gleich = faire Rennen)
-    Handling  = {              -- CHandlingData-Werte (float)
-        fMass                     = 230.0,
-        fInitialDragCoeff         = 6.0,
-        fInitialDriveForce        = 0.32,
-        fInitialDriveMaxFlatVel   = 118.0,
-        fDriveInertia             = 1.4,
-        fBrakeForce               = 0.9,
-        fBrakeBiasFront           = 0.4,
-        fSteeringLock             = 38.0,
-        fTractionCurveMax         = 2.65,
-        fTractionCurveMin         = 2.35,
-        fTractionCurveLateral     = 20.0,
-        fLowSpeedTractionLossMult = 0.25,
-        fTractionLossMult         = 0.6,
-        fSuspensionForce          = 3.6,
-        fAntiRollBarForce         = 1.6,
-        fCollisionDamageMult      = 0.2,
-        fDeformationDamageMult    = 0.1
-    },
+    Preset    = 'sport',       -- 'leihkart' | 'sport' | 'drift' (siehe Config.KartPresets)
     -- Optik: Farben (GTA-Farbindex), Startnummern-Kennzeichen
     Colors    = { primary = 89, secondary = 0, pearl = 89, wheels = 0 }, -- Racing-Gelb / Schwarz
-    NumberPlates = true         -- Kennzeichen zeigt "KB-<Startplatz>"
+    NumberPlates = true         -- Kennzeichen zeigt "KB-<Startnummer>"
+}
+
+-- Fahrverhalten. MaxSpeed in km/h (für alle gleich = faire Rennen), Handling = CHandlingData-Floats,
+-- CenterOfMass = vecCentreOfMassOffset (tiefer = kippt weniger).
+Config.KartPresets = {
+    -- ruhig und gutmütig, für Einsteiger / Events
+    leihkart = {
+        MaxSpeed = 80.0, CenterOfMass = vector3(0.0, -0.05, -0.18),
+        Handling = {
+            fMass = 230.0, fInitialDragCoeff = 6.0, fInitialDriveForce = 0.30, fInitialDriveMaxFlatVel = 105.0,
+            fDriveInertia = 1.2, fBrakeForce = 0.9, fBrakeBiasFront = 0.4, fSteeringLock = 36.0,
+            fTractionCurveMax = 2.6, fTractionCurveMin = 2.35, fTractionCurveLateral = 20.0,
+            fTractionBiasFront = 0.48, fLowSpeedTractionLossMult = 0.0, fTractionLossMult = 0.6,
+            fSuspensionForce = 3.6, fSuspensionCompDamp = 1.6, fSuspensionReboundDamp = 2.4,
+            fAntiRollBarForce = 1.6, fRollCentreHeightFront = 0.05, fRollCentreHeightRear = 0.05,
+            fCollisionDamageMult = 0.2, fDeformationDamageMult = 0.1
+        }
+    },
+    -- Standard: spritzig, viel Grip, direkte Lenkung, liegt wie ein Brett
+    sport = {
+        MaxSpeed = 100.0, CenterOfMass = vector3(0.0, -0.08, -0.28),
+        Handling = {
+            fMass = 200.0, fInitialDragCoeff = 5.0, fInitialDriveForce = 0.40, fInitialDriveMaxFlatVel = 128.0,
+            fDriveInertia = 1.7, fBrakeForce = 1.15, fBrakeBiasFront = 0.45, fSteeringLock = 40.0,
+            fTractionCurveMax = 2.9, fTractionCurveMin = 2.65, fTractionCurveLateral = 17.5,
+            fTractionBiasFront = 0.49, fLowSpeedTractionLossMult = 0.0, fTractionLossMult = 0.35,
+            fSuspensionForce = 4.4, fSuspensionCompDamp = 2.0, fSuspensionReboundDamp = 3.0,
+            fAntiRollBarForce = 2.4, fRollCentreHeightFront = 0.02, fRollCentreHeightRear = 0.02,
+            fCollisionDamageMult = 0.1, fDeformationDamageMult = 0.05
+        }
+    },
+    -- Heck kommt leicht, für Drift-/Fun-Events
+    drift = {
+        MaxSpeed = 95.0, CenterOfMass = vector3(0.0, -0.10, -0.25),
+        Handling = {
+            fMass = 210.0, fInitialDragCoeff = 5.5, fInitialDriveForce = 0.42, fInitialDriveMaxFlatVel = 120.0,
+            fDriveInertia = 1.8, fBrakeForce = 1.0, fBrakeBiasFront = 0.4, fSteeringLock = 48.0,
+            fTractionCurveMax = 2.1, fTractionCurveMin = 1.7, fTractionCurveLateral = 24.0,
+            fTractionBiasFront = 0.54, fLowSpeedTractionLossMult = 0.6, fTractionLossMult = 0.5,
+            fSuspensionForce = 4.0, fSuspensionCompDamp = 1.8, fSuspensionReboundDamp = 2.8,
+            fAntiRollBarForce = 2.0, fRollCentreHeightFront = 0.03, fRollCentreHeightRear = 0.03,
+            fCollisionDamageMult = 0.1, fDeformationDamageMult = 0.05
+        }
+    }
 }
 
 -- Rennen
@@ -313,3 +338,15 @@ Config.Text.spectate_none  = 'Kein laufendes Rennen.'
 Config.Text.ed_boost       = 'Boost-Feld %s gesetzt'
 Config.Text.ed_item        = 'Item-Box %s gesetzt'
 Config.Text.ed_podium      = 'Siegerpodest gesetzt'
+
+-- Angehobene Strecke: einheitliche Fahrbahn aus Platten (lokal gespawnt)
+-- Das erste Modell, das es im Spiel gibt, wird genommen; die Größe misst das Skript selbst.
+Config.Platform = {
+    Models       = { 'stt_prop_track_straight_m', 'stt_prop_track_straight_s', 'stt_prop_track_straight_l' },
+    Margin       = 4.5,    -- Plattform ist links/rechts so viel breiter als die Checkpoint-Breite
+    Overlap      = 0.4,    -- Überlappung der Platten in Metern (keine Lücken)
+    DefaultRaise = 3.0,    -- Standard-Höhe für /kartplatform
+    FallReset    = 2.0     -- so viele Meter unter der Fahrbahn = automatisch zurücksetzen
+}
+Config.Text.reset_done   = 'Zurückgesetzt – Runde ungültig.'
+Config.Text.ed_platform  = 'Angehobene Strecke: %s'

@@ -6,6 +6,10 @@ function IsEditing() return E ~= nil end
 local function msg(key, ...) Notify(KB.T(key, ...), 'info') end
 
 local function groundZ(c)
+    -- auf angehobenen Strecken: Höhe der eigenen Position (Fahrbahn = lokale Objekte)
+    if E and E.track.platform and E.track.platform.enabled then
+        return IsPedInAnyVehicle(PlayerPedId(), false) and c.z - 0.4 or c.z - 1.0
+    end
     local ok, z = GetGroundZFor_3dCoord(c.x, c.y, c.z + 2.0, false)
     return ok and z or c.z - 1.0
 end
@@ -14,7 +18,7 @@ end
 local function rebuildPreview()
     if not E then return end
     DeleteObjectList(E.objs)
-    E.objs = SpawnObjectList(KB.BuildObjectList(E.track))
+    E.objs = SpawnTrackObjects(E.track)
 end
 
 local function finishEditor()
@@ -170,6 +174,21 @@ RegisterCommand('kartpodium', function()
     msg('ed_podium')
 end, false)
 
+-- Angehobene Strecke an/aus: verschiebt alle Punkte um die Höhe
+RegisterCommand('kartplatform', function(_, args)
+    if not E then return msg('ed_not_active') end
+    local tr = E.track
+    local on = not (tr.platform and tr.platform.enabled)
+    local raise = on and (tonumber(args[1]) or Config.Platform.DefaultRaise) or tr.platform.raise
+    local dz = on and raise or -raise
+    for _, key in ipairs({ 'checkpoints', 'grid', 'boostPads', 'itemBoxes', 'props' }) do
+        for _, o in ipairs(tr[key] or {}) do o.z = o.z + dz end
+    end
+    tr.platform = on and { enabled = true, raise = raise } or nil
+    msg('ed_platform', on and (raise .. ' m') or KB.T('off'))
+    rebuildPreview()
+end, false)
+
 RegisterCommand('kartlaps', function(_, args)
     if not E then return msg('ed_not_active') end
     local n = math.floor(tonumber(args[1]) or 3)
@@ -218,5 +237,7 @@ CreateThread(function()
     TriggerEvent('chat:addSuggestion', '/kartboost', 'Boost-Feld setzen')
     TriggerEvent('chat:addSuggestion', '/kartitem', 'Item-Box setzen')
     TriggerEvent('chat:addSuggestion', '/kartpodium', 'Siegerpodest setzen')
+    TriggerEvent('chat:addSuggestion', '/kartplatform', 'Angehobene Strecke an/aus', { { name = 'höhe', help = 'Meter (Standard 3)' } })
+    TriggerEvent('chat:addSuggestion', '/kartreset', 'Kart auf den letzten Checkpoint zurücksetzen')
     TriggerEvent('chat:addSuggestion', '/kartleave', 'Rennen / Zeitfahren verlassen')
 end)

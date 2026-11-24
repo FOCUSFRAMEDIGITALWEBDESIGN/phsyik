@@ -323,6 +323,15 @@ function StartRaceThread()
                     R.pendingCp = nil
                 end
             end
+            -- Absturz von der angehobenen Strecke: automatisch zurücksetzen
+            if R.started and not R.finished and veh ~= 0 and R.track.platform and not R.resetPending then
+                local ref = R.track.checkpoints[R.nextCp == 1 and #R.track.checkpoints or R.nextCp - 1]
+                if pc.z < ref.z - Config.Platform.FallReset and pc.z < R.track.checkpoints[R.nextCp].z - Config.Platform.FallReset then
+                    R.resetPending = GetGameTimer()
+                    TriggerServerEvent('kartbahn:resetReq')
+                end
+            end
+            if R.resetPending and GetGameTimer() - R.resetPending > 3500 then R.resetPending = nil end
             if FeatTick then FeatTick(R, ped, veh, pc) end
             if GhostTick then GhostTick(R, ped, veh) end
 
@@ -367,6 +376,30 @@ function StartRaceThread()
         end
     end)
 end
+
+RegisterNetEvent('kartbahn:resetTo', function(p)
+    local R = RaceState
+    if not R then return end
+    local veh = GetVehiclePedIsIn(PlayerPedId(), false)
+    if veh == 0 then veh = R.veh end
+    if not veh or not DoesEntityExist(veh) then return end
+    DoScreenFadeOut(150)
+    Wait(200)
+    SetEntityCoords(veh, p.x, p.y, p.z, false, false, false, false)
+    SetEntityHeading(veh, p.h)
+    SetEntityVelocity(veh, 0.0, 0.0, 0.0)
+    SetVehicleFixed(veh)
+    if GetVehiclePedIsIn(PlayerPedId(), false) ~= veh then TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1) end
+    Wait(150)
+    DoScreenFadeIn(300)
+    R.pendingCp = nil
+    SendNUIMessage({ action = 'banner', text = KB.T('reset_done'), kind = 'error' })
+end)
+
+-- manuell zurücksetzen (z. B. festgefahren)
+RegisterCommand('kartreset', function()
+    if RaceState and RaceState.started then TriggerServerEvent('kartbahn:resetReq') end
+end, false)
 
 RegisterCommand('kartleave', function()
     TriggerServerEvent('kartbahn:stopRequest')

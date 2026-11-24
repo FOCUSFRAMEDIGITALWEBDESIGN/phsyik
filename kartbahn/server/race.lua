@@ -434,6 +434,23 @@ RegisterNetEvent('kartbahn:boostReq', function()
     TriggerClientEvent('kartbahn:boostState', src, r.boost, true)
 end)
 
+-- ===== Zurücksetzen auf den letzten Checkpoint (Absturz von der Plattform / festgefahren) =====
+RegisterNetEvent('kartbahn:resetReq', function()
+    local src = source
+    local s, r = sessionOf(src)
+    if not s then return end
+    local t = now()
+    if t - (r.lastReset or 0) < 3000 then return end
+    r.lastReset = t
+    r.lapInvalid = true -- Runde zählt nicht mehr
+    local cps = s.track.checkpoints
+    local n = #cps
+    local idx = (r.nextCp == 1) and n or (r.nextCp - 1)
+    local cp = cps[idx]
+    local dx, dy = KB.CpDirection(cps, idx)
+    TriggerClientEvent('kartbahn:resetTo', src, { x = cp.x, y = cp.y, z = cp.z + 0.6, h = math.deg(math.atan(-dx, dy)) })
+end)
+
 -- ===== 6) Items =====
 local function rollItem(s, r)
     local pos = positionOf(s, r)

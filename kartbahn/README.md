@@ -150,3 +150,17 @@ Wer das nicht möchte, entfernt die Zeile `data_file` im `fxmanifest.lua`; die W
 Zusätzliche Editor-Befehle: `/kartboost`, `/kartitem`, `/kartpodium`.
 
 ![Rennanzeige](docs/ui-hud.png)
+
+## Fahrverhalten (Presets)
+In `config.lua` → `Config.Kart.Preset`:
+- `leihkart` – ruhig, 80 km/h, für Einsteiger
+- `sport` – **Standard**, 100 km/h, viel Grip, direkte Lenkung, sehr tiefer Schwerpunkt
+- `drift` – Heck kommt leicht, größerer Lenkeinschlag
+
+Alle Werte stehen in `Config.KartPresets` und können frei angepasst werden. `data/meta/handling.meta` entspricht dem Preset `sport`.
+
+## Angehobene Strecke
+Die Strecke „LSIA Kartring“ liegt 3 m über dem Boden auf einer durchgehenden Fahrbahn aus gleichen Asphalt-Platten
+(Modell aus `Config.Platform.Models`, Größe wird im Spiel automatisch gemessen) – dadurch überall gleicher Grip.
+- Wer runterfällt, wird automatisch auf den letzten Checkpoint zurückgesetzt (Runde ungültig), manuell mit `/kartreset`
+- Im Editor: `/kartplatform [höhe]` schaltet die angehobene Fahrbahn für eine Strecke an/aus

@@ -46,6 +46,10 @@ function PlayPodium(d)
     if not top[1] then return end
 
     local p = KB.GetPodium(track)
+    if not track.podium and track.platform then
+        local ok, gz = GetGroundZFor_3dCoord(p.x, p.y, p.z + 5.0, false)
+        p = { x = p.x, y = p.y, z = ok and gz or p.z, h = p.h }
+    end
     local h = math.rad(p.h)
     local rx, ry = math.cos(h), math.sin(h)        -- seitliche Achse des Podests
     local fx, fy = -math.sin(h), math.cos(h)       -- Blickrichtung
