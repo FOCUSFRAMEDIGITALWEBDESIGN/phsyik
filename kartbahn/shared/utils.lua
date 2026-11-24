@@ -47,8 +47,47 @@ function KB.CpEdges(cps, i, extra)
            { x = cp.x - nx * half, y = cp.y - ny * half, z = cp.z }
 end
 
+-- Punkt auf einem geschlossenen Polygonzug bei Bogenlänge d
+local function pointAt(pts, cum, total, d)
+    d = d % total
+    local n = #pts
+    for i = 1, n do
+        if d <= cum[i + 1] then
+            local a, b = pts[i], pts[i == n and 1 or i + 1]
+            local seg = cum[i + 1] - cum[i]
+            local t = seg > 0 and (d - cum[i]) / seg or 0
+            return a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t
+        end
+    end
+    return pts[1].x, pts[1].y, pts[1].z
+end
+
+-- Objekte Kante an Kante entlang eines geschlossenen Polygonzugs:
+-- jedes Teil spannt eine Sehne zwischen zwei aufeinanderfolgenden Punkten -> keine Überlappung, keine Lücken
+function KB.ChainAlong(pts, length)
+    local n = #pts
+    local cum = { 0.0 }
+    for i = 1, n do
+        local a, b = pts[i], pts[i == n and 1 or i + 1]
+        cum[i + 1] = cum[i] + math.sqrt((b.x - a.x) ^ 2 + (b.y - a.y) ^ 2)
+    end
+    local total = cum[n + 1]
+    local count = math.max(3, math.floor(total / length + 0.5))
+    local step = total / count
+    local out = {}
+    for k = 0, count - 1 do
+        local x1, y1, z1 = pointAt(pts, cum, total, k * step)
+        local x2, y2, z2 = pointAt(pts, cum, total, (k + 1) * step)
+        out[#out + 1] = { x = (x1 + x2) / 2, y = (y1 + y2) / 2, z = (z1 + z2) / 2,
+            h = math.deg(math.atan(y2 - y1, x2 - x1)), len = math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2) }
+    end
+    return out
+end
+
 -- Liste aller lokal zu spawnenden Objekte einer Strecke
-function KB.BuildObjectList(track)
+-- opts.barrierLen / opts.barrierAlongY: gemessene Länge und Ausrichtung des Banden-Modells (Client)
+function KB.BuildObjectList(track, opts)
+    opts = opts or {}
     local list = {}
     local cps = track.checkpoints or {}
     local n = #cps
@@ -57,28 +96,21 @@ function KB.BuildObjectList(track)
         for i = 1, n do
             lefts[i], rights[i] = KB.CpEdges(cps, i, Config.Track.BarrierOffset)
         end
+        local len = opts.barrierLen or track.barrierSpacing or Config.Track.BarrierSpacing
+        local model = track.barrierModel or Config.Track.BarrierModel
         for _, side in ipairs({ lefts, rights }) do
-            for i = 1, n do
-                local a, b = side[i], side[i == n and 1 or i + 1]
-                local dx, dy = b.x - a.x, b.y - a.y
-                local len = math.sqrt(dx * dx + dy * dy)
-                local count = math.max(1, math.floor(len / (track.barrierSpacing or Config.Track.BarrierSpacing)))
-                -- Objekt-X-Achse entlang der Linie ausrichten
-                local h = math.deg(math.atan(dy, dx))
-                for k = 0, count - 1 do
-                    local t = (k + 0.5) / count
-                    list[#list + 1] = {
-                        model = track.barrierModel or Config.Track.BarrierModel,
-                        x = a.x + dx * t, y = a.y + dy * t, z = a.z + (b.z - a.z) * t, h = h
-                    }
-                end
+            for _, c in ipairs(KB.ChainAlong(side, len)) do
+                -- Längsachse des Modells entlang der Linie
+                list[#list + 1] = { model = model, x = c.x, y = c.y, z = c.z, h = opts.barrierAlongY and (c.h - 90.0) or c.h }
             end
         end
-        -- Pylonen an den Checkpoint-Kanten
-        for i = 1, n do
-            local l, r = KB.CpEdges(cps, i, 0.0)
-            list[#list + 1] = { model = Config.Track.ConeModel, x = l.x, y = l.y, z = l.z, h = 0.0 }
-            list[#list + 1] = { model = Config.Track.ConeModel, x = r.x, y = r.y, z = r.z, h = 0.0 }
+        -- Pylonen nur ohne Bande sinnvoll (sonst nur Hindernisse am Rand)
+        if Config.Track.Cones then
+            for i = 1, n do
+                local l, r = KB.CpEdges(cps, i, 0.0)
+                list[#list + 1] = { model = Config.Track.ConeModel, x = l.x, y = l.y, z = l.z, h = 0.0 }
+                list[#list + 1] = { model = Config.Track.ConeModel, x = r.x, y = r.y, z = r.z, h = 0.0 }
+            end
         end
     end
     -- Flutlichter hinter der Bande
@@ -158,9 +190,22 @@ function KB.LightSpots(track)
         local d = cps[i].w / 2 + Config.Track.BarrierOffset + Config.Lights.Offset
         if track.platform then d = math.min(d, cps[i].w / 2 + Config.Platform.Margin - 0.8) end
         local x, y = cps[i].x + nx * d * side, cps[i].y + ny * d * side
+        -- nicht in Reifenstapel/Deko stellen: sonst andere Seite probieren
+        local function blocked(px, py)
+            for _, p in ipairs(track.props or {}) do
+                if KB.Dist2D(px, py, p.x, p.y) < 3.5 then return true end
+            end
+            return false
+        end
+        if blocked(x, y) then
+            side = -side
+            x, y = cps[i].x + nx * d * side, cps[i].y + ny * d * side
+        end
         -- Lampe schaut zur Strecke
         local h = math.deg(math.atan(nx * side, -ny * side))
-        out[#out + 1] = { x = x, y = y, z = cps[i].z, h = h, tx = cps[i].x, ty = cps[i].y }
+        if not blocked(x, y) then
+            out[#out + 1] = { x = x, y = y, z = cps[i].z, h = h, tx = cps[i].x, ty = cps[i].y }
+        end
         side = -side
     end
     return out

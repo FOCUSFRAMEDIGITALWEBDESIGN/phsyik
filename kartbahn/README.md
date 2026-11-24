@@ -172,3 +172,11 @@ Die Strecke „LSIA Kartring“ liegt 3 m über dem Boden auf einer durchgehende
 - **Flutlicht** an jedem 4. Checkpoint, das nachts (20–6 Uhr) die Strecke wirklich ausleuchtet (`Config.Lights`).
 
 ![Streckenplan](docs/streckenplan.png)
+
+## Saubere Strecke & Bodenhaftung
+- **Fahrbahn-Platten** liegen auf einem exakten Raster (Kante an Kante, ausgerichtet an der Start-/Ziel-Geraden) – keine Überlappungen.
+- **Bande**: Modelllänge wird im Spiel gemessen, die Teile stoßen genau aneinander (auch in Kurven, als Sehnen).
+- Pylonen am Fahrbahnrand nur noch optional (`Config.Track.Cones`), Flutlichter weichen Deko-Objekten aus.
+- Im Editor wird die normale Fassung der Strecke ausgeblendet (keine doppelten Objekte).
+- **Kart klebt am Boden** (`Config.Grip`): höhere Schwerkraft fürs Kart, Anpressdruck in der Luft, Begrenzung beim Abheben
+  und Kippschutz (wird sofort gerade gestellt).

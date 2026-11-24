@@ -1,6 +1,7 @@
 -- Lokale (nicht vernetzte) Streckenobjekte: Absperrungen, Pylonen, Props
 local spawned = {}   -- [trackId] = { objs = {}, center = vector3 }
 local centers = {}
+local hidden = {}    -- [trackId] = true, solange der Editor die Strecke bearbeitet
 
 local function loadModel(hash)
     if not IsModelInCdimage(hash) then return false end
@@ -42,6 +43,24 @@ local function pickPlatformModel()
     return nil
 end
 
+-- Abstand Punkt -> Strecke (Mittellinie) und Höhe dort
+local function nearestOnTrack(cps, px, py)
+    local best, bz = math.huge, cps[1].z
+    local n = #cps
+    for i = 1, n do
+        local a, b = cps[i], cps[i == n and 1 or i + 1]
+        local dx, dy = b.x - a.x, b.y - a.y
+        local l2 = dx * dx + dy * dy
+        local t = l2 > 0 and math.max(0, math.min(1, ((px - a.x) * dx + (py - a.y) * dy) / l2)) or 0
+        local qx, qy = a.x + dx * t, a.y + dy * t
+        local d = math.sqrt((px - qx) ^ 2 + (py - qy) ^ 2) - math.max(a.w, b.w) / 2
+        if d < best then best, bz = d, a.z + (b.z - a.z) * t end
+    end
+    return best, bz
+end
+
+-- Fahrbahn als exaktes Raster gleicher Platten (Kante an Kante, keine Überlappung),
+-- ausgerichtet an der Start-/Ziel-Geraden
 local function spawnPlatform(track)
     local objs = {}
     local hash = pickPlatformModel()
@@ -49,49 +68,42 @@ local function spawnPlatform(track)
         print('[kartbahn] Kein Plattform-Modell gefunden – Strecke ohne Plattform.')
         return objs
     end
-    -- Maße des Modells: Fahrbahn läuft entlang der längeren Achse
     local mn, mx = GetModelDimensions(hash)
     local sx, sy = mx.x - mn.x, mx.y - mn.y
-    local alongX = sx > sy
-    local tileLen = math.max(alongX and sx or sy, 1.0)
-    local tileW = math.max(alongX and sy or sx, 1.0)
-    local step = math.max(tileLen - Config.Platform.Overlap, 0.5)
     local cps = track.checkpoints
-    local n = #cps
-    for i = 1, n do
-        local a, b = cps[i], cps[i == n and 1 or i + 1]
-        local dx, dy = b.x - a.x, b.y - a.y
-        local len = math.sqrt(dx * dx + dy * dy)
-        if len > 0.1 then
-            local ux, uy = dx / len, dy / len
-            local nx, ny = -uy, ux
-            local W = math.max(a.w, b.w) + Config.Platform.Margin * 2
-            -- über die Enden hinaus verlängern, damit Kurven geschlossen sind
-            local ext = W / 2
-            local total = len + ext * 2
-            local count = math.max(1, math.ceil(total / step))
-            local lanes = math.max(1, math.ceil(W / tileW))
-            local h = math.deg(math.atan(-ux, uy))
-            if alongX then h = h + 90.0 end
-            -- winziger Höhenversatz je Segment gegen Flackern überlappender Platten
-            local zOff = (i % 2) * 0.01
-            for k = 0, count - 1 do
-                local along = -ext + (k + 0.5) * (total / count)
-                local t = math.max(0.0, math.min(1.0, along / len))
-                local surfZ = a.z + (b.z - a.z) * t
-                for l = 0, lanes - 1 do
-                    local lat = (l - (lanes - 1) / 2) * tileW
-                    local x = a.x + ux * along + nx * lat
-                    local y = a.y + uy * along + ny * lat
-                    local obj = CreateObjectNoOffset(hash, x, y, surfZ - mx.z + zOff, false, false, false)
-                    SetEntityHeading(obj, h)
-                    FreezeEntityPosition(obj, true)
-                    SetEntityInvincible(obj, true)
-                    SetEntityLodDist(obj, 500)
-                    objs[#objs + 1] = obj
-                end
+    local ux, uy = KB.CpDirection(cps, 1)
+    local vx, vy = -uy, ux
+    -- Kachelmaße entlang u (Fahrtrichtung der Start-Geraden) und v (quer); Modell-Y = Längsachse
+    local tu, tv = sy, sx
+    local h = math.deg(math.atan(-ux, uy))
+    -- Bounding-Box im lokalen Raster
+    local o = cps[1]
+    local minU, maxU, minV, maxV = math.huge, -math.huge, math.huge, -math.huge
+    for _, c in ipairs(cps) do
+        local du, dv = (c.x - o.x) * ux + (c.y - o.y) * uy, (c.x - o.x) * vx + (c.y - o.y) * vy
+        minU, maxU, minV, maxV = math.min(minU, du), math.max(maxU, du), math.min(minV, dv), math.max(maxV, dv)
+    end
+    local pad = 25.0
+    -- Raster so legen, dass eine Kachelkante genau auf der Start-/Ziellinie liegt
+    local i0, i1 = math.floor((minU - pad) / tu), math.ceil((maxU + pad) / tu)
+    local j0, j1 = math.floor((minV - pad) / tv), math.ceil((maxV + pad) / tv)
+    local margin = Config.Platform.Margin
+    for i = i0, i1 do
+        for j = j0, j1 do
+            local cu, cv = (i + 0.5) * tu, (j + 0.5) * tv
+            local px, py = o.x + ux * cu + vx * cv, o.y + uy * cu + vy * cv
+            -- Kachel nehmen, wenn sie die Fahrbahn + Rand berührt
+            local d, z = nearestOnTrack(cps, px, py)
+            if d <= margin + math.max(tu, tv) * 0.35 then
+                local obj = CreateObjectNoOffset(hash, px, py, z - mx.z, false, false, false)
+                SetEntityHeading(obj, h)
+                FreezeEntityPosition(obj, true)
+                SetEntityInvincible(obj, true)
+                SetEntityLodDist(obj, 500)
+                objs[#objs + 1] = obj
             end
         end
+        if i % 4 == 0 then Wait(0) end
     end
     SetModelAsNoLongerNeeded(hash)
     return objs
@@ -102,7 +114,16 @@ function SpawnTrackObjects(track)
     local objs = {}
     local raised = track.platform and track.platform.enabled
     if raised and #(track.checkpoints or {}) >= 3 then objs = spawnPlatform(track) end
-    for _, o in ipairs(SpawnObjectList(KB.BuildObjectList(track), raised)) do objs[#objs + 1] = o end
+    -- Banden-Modell vermessen, damit die Teile genau aneinanderstoßen
+    local opts = {}
+    local bh = joaat(track.barrierModel or Config.Track.BarrierModel)
+    if track.autoBarriers and loadModel(bh) then
+        local mn, mx = GetModelDimensions(bh)
+        local bx, by = mx.x - mn.x, mx.y - mn.y
+        opts.barrierLen = math.max(bx, by)
+        opts.barrierAlongY = by > bx
+    end
+    for _, o in ipairs(SpawnObjectList(KB.BuildObjectList(track, opts), raised)) do objs[#objs + 1] = o end
     return objs
 end
 
@@ -119,8 +140,11 @@ local function despawnTrack(id)
     end
 end
 
-function RespawnTrack(id)
-    despawnTrack(id)
+-- Editor: gestreamte Fassung ausblenden, damit nichts doppelt übereinander liegt
+function SetTrackHidden(id, state)
+    if not id then return end
+    hidden[id] = state or nil
+    if state then despawnTrack(id) end
 end
 
 -- Neue Streckendaten: alles neu aufbauen
@@ -137,7 +161,7 @@ CreateThread(function()
         local pc = GetEntityCoords(PlayerPedId())
         for id, c in pairs(centers) do
             local d = #(pc - c)
-            if d < Config.Track.StreamDistance and not spawned[id] and TrackList[id] then
+            if d < Config.Track.StreamDistance and not spawned[id] and not hidden[id] and TrackList[id] then
                 spawned[id] = { objs = SpawnTrackObjects(TrackList[id]) }
             elseif d > Config.Track.StreamDistance + 50.0 and spawned[id] then
                 despawnTrack(id)

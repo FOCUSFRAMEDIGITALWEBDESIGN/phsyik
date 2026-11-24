@@ -46,14 +46,14 @@ Config.KartPresets = {
     },
     -- Standard: spritzig, viel Grip, direkte Lenkung, liegt wie ein Brett
     sport = {
-        MaxSpeed = 100.0, CenterOfMass = vector3(0.0, -0.08, -0.28),
+        MaxSpeed = 100.0, CenterOfMass = vector3(0.0, -0.08, -0.40),
         Handling = {
             fMass = 200.0, fInitialDragCoeff = 5.0, fInitialDriveForce = 0.40, fInitialDriveMaxFlatVel = 128.0,
             fDriveInertia = 1.7, fBrakeForce = 1.15, fBrakeBiasFront = 0.45, fSteeringLock = 40.0,
             fTractionCurveMax = 2.9, fTractionCurveMin = 2.65, fTractionCurveLateral = 17.5,
             fTractionBiasFront = 0.49, fLowSpeedTractionLossMult = 0.0, fTractionLossMult = 0.35,
             fSuspensionForce = 4.4, fSuspensionCompDamp = 2.0, fSuspensionReboundDamp = 3.0,
-            fAntiRollBarForce = 2.4, fRollCentreHeightFront = 0.02, fRollCentreHeightRear = 0.02,
+            fAntiRollBarForce = 3.5, fRollCentreHeightFront = 0.0, fRollCentreHeightRear = 0.0,
             fCollisionDamageMult = 0.1, fDeformationDamageMult = 0.05
         }
     },
@@ -122,7 +122,8 @@ Config.Track = {
     BarrierSpacing  = 3.0,
     BarrierOffset   = 1.0,   -- Abstand der Absperrung zur Checkpoint-Kante
     ConeModel       = 'prop_roadcone02a',
-    MaxObjects      = 800,   -- Bande (~480) + Pylonen + Deko passen hinein
+    Cones           = false, -- Pylonen an den Checkpoint-Kanten (nur bei Strecken ohne Bande sinnvoll)
+    MaxObjects      = 800,   -- Bande + Deko
     CpMarkerColor   = { 255, 204, 0, 90 },
     FinishColor     = { 255, 255, 255, 110 },
     ArrowColor      = { 255, 204, 0, 200 },
@@ -380,4 +381,14 @@ Config.Lights = {
     Intensity = 6.0,
     Color     = { 255, 244, 214 },
     NightFrom = 20, NightTo = 6
+}
+
+-- Kart klebt am Boden: mehr Schwerkraft, Anpressdruck in der Luft, Kippschutz
+Config.Grip = {
+    Enabled    = true,
+    Gravity    = 16.0,   -- Schwerkraft fürs Kart (GTA-Standard 9.8) – drückt das Kart auf die Fahrbahn
+    AirForce   = 2.5,    -- zusätzlicher Druck nach unten, solange nicht alle Räder Bodenkontakt haben
+    MaxRoll    = 25.0,   -- ab dieser Neigung (Grad) wird das Kart sofort wieder gerade gestellt
+    MaxPitch   = 25.0,
+    MaxUpSpeed = 1.5     -- maximale Aufwärtsgeschwindigkeit (m/s) – verhindert Abheben an Kanten
 }

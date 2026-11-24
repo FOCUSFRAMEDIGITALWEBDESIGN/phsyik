@@ -220,6 +220,26 @@ function FeatTick(R, ped, veh, pc)
         end
     end
 
+    -- Kart klebt am Boden
+    if Config.Grip.Enabled then
+        local G = Config.Grip
+        if not F.gravitySet then
+            F.gravitySet = true
+            SetVehicleGravityAmount(veh, G.Gravity)
+        end
+        local rot = GetEntityRotation(veh, 2)
+        if math.abs(rot.y) > G.MaxRoll or math.abs(rot.x) > G.MaxPitch then
+            -- Kippschutz: gerade stellen, Richtung und Tempo behalten
+            local v = GetEntityVelocity(veh)
+            SetEntityRotation(veh, 0.0, 0.0, rot.z, 2, true)
+            SetEntityVelocity(veh, v.x, v.y, math.min(v.z, 0.0))
+        elseif not IsVehicleOnAllWheels(veh) then
+            ApplyForceToEntityCenterOfMass(veh, 1, 0.0, 0.0, -G.AirForce, false, false, true, false)
+            local v = GetEntityVelocity(veh)
+            if v.z > G.MaxUpSpeed then SetEntityVelocity(veh, v.x, v.y, G.MaxUpSpeed) end
+        end
+    end
+
     -- Leistung anwenden (muss jeden Frame gesetzt werden)
     local power = 1.0
     local maxSpeed = GetKartPreset().MaxSpeed

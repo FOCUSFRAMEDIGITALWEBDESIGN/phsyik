@@ -22,7 +22,10 @@ local function rebuildPreview()
 end
 
 local function finishEditor()
-    if E then DeleteObjectList(E.objs) end
+    if E then
+        DeleteObjectList(E.objs)
+        SetTrackHidden(E.hiddenId, false)
+    end
     E = nil
 end
 
@@ -33,7 +36,8 @@ RegisterNetEvent('kartbahn:editorStart', function(existing, id)
         minLap = Config.AntiCheat.MinLapTime, autoBarriers = true, checkpoints = {}, grid = {}, props = {}
     }
     t.boostPads, t.itemBoxes = t.boostPads or {}, t.itemBoxes or {}
-    E = { track = t, history = {}, objs = {} }
+    E = { track = t, history = {}, objs = {}, hiddenId = existing and existing.id or nil }
+    SetTrackHidden(E.hiddenId, true)
     msg('ed_start', t.name or id)
     rebuildPreview()
     CreateThread(function()
