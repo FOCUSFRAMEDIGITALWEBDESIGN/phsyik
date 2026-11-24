@@ -106,3 +106,7 @@ Modelle, die es in deiner Spielversion nicht gibt, werden automatisch übersprun
 
 ## Vorschau
 ![Anmelde-Menü](docs/ui-anmeldung.png)
+![Profil](docs/ui-profil.png)
+![Rangliste](docs/ui-rangliste.png)
+![Bestzeiten](docs/ui-bestzeiten.png)
+![Letzte Rennen](docs/ui-letzte-rennen.png)
