@@ -32,7 +32,14 @@ RegisterCallback('getMenu', function(src)
             id = id, name = t.name, laps = t.laps, length = KB.TrackLength(t), grid = #t.grid,
             record = rec and { time = rec.time, name = rec.name } or nil,
             pb = pbs[id],
-            lobby = Race.GetLobbyInfo(id, src)
+            lobby = Race.GetLobbyInfo(id, src),
+            outline = (function()
+                local o = {}
+                for _, cp in ipairs(t.checkpoints) do o[#o + 1] = { math.floor(cp.x), math.floor(cp.y) } end
+                return o
+            end)(),
+            start = { math.floor(t.checkpoints[1].x), math.floor(t.checkpoints[1].y) },
+            raised = t.platform ~= nil
         }
     end
     table.sort(tracks, function(a, b) return a.name < b.name end)

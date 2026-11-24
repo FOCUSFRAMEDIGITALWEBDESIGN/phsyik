@@ -90,6 +90,7 @@ function switchTab(tab) {
     $$('.tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
     $$('.page').forEach((p) => p.classList.add('hidden'));
     $(`#page-${tab}`).classList.remove('hidden');
+    $('#top-title').textContent = { drive: 'Fahren', ranking: 'Rangliste', profile: 'Profil' }[tab];
     if (tab === 'ranking') loadRanking();
 }
 
@@ -97,8 +98,35 @@ function modeOptions() {
     return (menuData.modes || []).map((m) => `<option value="${esc(m.id)}">${esc(m.label)}${m.ranked ? ' (Rating)' : ''}</option>`).join('');
 }
 
+// Mini-Streckenumriss als SVG (für die Karten)
+function trackSvg(outline, start) {
+    if (!outline || outline.length < 3) return '';
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const [x, y] of outline) { minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+    const w = maxX - minX || 1, h = maxY - minY || 1, sc = Math.min(280 / w, 120 / h);
+    const pr = (x, y) => `${(10 + (x - minX) * sc).toFixed(1)},${(10 + (maxY - y) * sc).toFixed(1)}`;
+    const pts = outline.map(([x, y]) => pr(x, y)).join(' ');
+    const [sx, sy] = pr(start[0], start[1]).split(',');
+    return `<svg viewBox="0 0 ${20 + w * sc} ${20 + h * sc}" preserveAspectRatio="xMaxYMid meet">
+        <polygon points="${pts}" fill="none" stroke="rgba(255,204,0,.15)" stroke-width="12" stroke-linejoin="round"/>
+        <polygon points="${pts}" fill="none" stroke="#ffcc00" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="${sx}" cy="${sy}" r="6" fill="#fff" stroke="#111" stroke-width="2"/></svg>`;
+}
+
+function renderHead() {
+    if (!menuData) return;
+    const p = menuData.profile;
+    const t = tierOf(p.rating);
+    const initials = String(p.name || '?').split(' ').map((x) => x[0]).join('').slice(0, 2).toUpperCase();
+    $('#head-profile').innerHTML = `<span>${esc(p.name)}</span>${tierBadge(p.rating)}<span class="r">${p.rating}</span>
+        <span class="avatar" style="background:${t.color}">${esc(initials)}</span>`;
+    const s = menuData.settings;
+    $('#side-foot').innerHTML = `Framework: <b>${esc(s.framework || 'standalone')}</b><br>Strecken: <b>${menuData.tracks.length}</b>`;
+}
+
 function renderDrive() {
     if (!menuData) return;
+    renderHead();
     const s = menuData.settings;
     const sess = menuData.session;
     const prizes = s.prizes.map((p, i) => `${i + 1}. ${money(p)}`).join(' · ');
@@ -106,12 +134,12 @@ function renderDrive() {
         <div class="chip">Startgebühr <b>${s.fee > 0 ? money(s.fee) : 'kostenlos'}</b></div>
         <div class="chip">Preisgeld <b>${s.fee > 0 || s.prizes[0] > 0 ? prizes : '–'}</b></div>
         <div class="chip">Fahrer <b>${s.minPlayers}–${s.maxPlayers}</b></div>
-        <div class="chip">Dein Rating <b>${menuData.profile.rating}</b> ${tierBadge(menuData.profile.rating)}</div>`;
+        <div class="chip acc">Modi <b>${(menuData.modes || []).length}</b></div>`;
 
     let html = '';
     // 13) Laufende Rennen zum Zuschauen
     if (s.spectate && menuData.running && menuData.running.length && !sess) {
-        html += menuData.running.map((r) => `<div class="running"><span class="mode-tag">${esc(r.modeLabel)}</span>
+        html += menuData.running.map((r) => `<div class="running"><span class="live"></span><span class="mode-tag">${esc(r.modeLabel)}</span>
             <b>${esc(r.trackName)}</b><span style="color:var(--muted)">${r.count} Fahrer · läuft</span>
             <button class="btn ghost" data-act="spectate" data-id="${r.id}" style="margin-left:auto">Zuschauen</button></div>`).join('');
     }
@@ -124,9 +152,10 @@ function renderDrive() {
         let raceBtn;
         if (lb && lb.state === 'lobby') {
             const racers = (lb.racers || []).map((r) => `<span>${esc(r.name)} · ${r.rating}</span>`).join('');
-            lobbyHtml = `<div class="lobby"><span class="mode-tag">${esc(lb.modeLabel)}</span>Lobby offen: <b>${lb.count}/${lb.max}</b> Fahrer ·
-                ${lb.mode === 'elim' ? 'Runden = Fahrer − 1' : lb.laps + ' Runden'} · Start in <b>${lb.timeLeft} s</b>
-                <div class="racers">${racers}</div></div>`;
+            lobbyHtml = `<div class="lobby"><div class="lobby-top"><span class="mode-tag">${esc(lb.modeLabel)}</span>
+                <span>${lb.mode === 'elim' ? 'Runden = Fahrer − 1' : lb.laps + ' Runden'} · Start in <b>${lb.timeLeft} s</b></span>
+                <span class="count">${lb.count}/${lb.max}</span></div>
+                <div class="racers">${racers}</div>`;
             raceBtn = inThis
                 ? `<button class="btn danger" data-act="leave">Lobby verlassen</button>`
                 : `<button class="btn primary" data-act="join" data-track="${esc(t.id)}" ${sess ? 'disabled' : ''}>Beitreten</button>`;
@@ -139,6 +168,7 @@ function renderDrive() {
                     <input class="inp" type="number" min="${s.betMin}" max="${s.betMax}" value="${s.betMin}" id="bet-amount-${esc(t.id)}">
                     <button class="btn ghost" data-act="bet" data-track="${esc(t.id)}">Wetten</button>`}</div>`;
             }
+            lobbyHtml += '</div>';
         } else if (lb) {
             lobbyHtml = `<div class="lobby"><span class="mode-tag">${esc(lb.modeLabel)}</span>Rennen läuft (${lb.count} Fahrer)</div>`;
             raceBtn = s.spectate && !sess
@@ -151,18 +181,23 @@ function renderDrive() {
         }
         const ghostSel = s.ghost ? `<select class="inp" id="ghost-${esc(t.id)}" title="Ghost">
             <option value="pb">Ghost: eigene Bestzeit</option><option value="record">Ghost: Streckenrekord</option><option value="none">Ohne Ghost</option></select>` : '';
+        const live = lb && lb.state !== 'lobby';
         return `<div class="track">
-            <h3>${esc(t.name)} <small>${t.length} m · ${t.grid} Startplätze</small></h3>
-            <div class="meta">
-                <div class="rec">Rekord: <b class="mono">${fmt(t.record && t.record.time)}</b> ${t.record ? esc(t.record.name) : ''}</div>
-                <div>Deine Bestzeit: <b class="mono">${fmt(t.pb)}</b></div>
-                <div>Standard-Runden: <b>${t.laps}</b></div>
-                <div>Zeitfahren: <b>${s.ttFee > 0 ? money(s.ttFee) : 'kostenlos'}</b></div>
+            <div class="thumb">
+                <div class="badge">${live ? '<span class="live">LIVE</span>' : ''}${lb && lb.state === 'lobby' ? '<span>LOBBY OFFEN</span>' : ''}${t.raised ? '<span>ANGEHOBEN</span>' : ''}</div>
+                ${trackSvg(t.outline, t.start)}
+                <div class="t-name"><h3>${esc(t.name)}</h3><small>${t.length} m · ${t.grid} Startplätze · ${t.laps} Runden</small></div>
             </div>
-            ${lobbyHtml}
-            <div class="actions">${raceBtn}</div>
-            <div class="actions">${ghostSel}
-                <button class="btn ghost" data-act="tt" data-track="${esc(t.id)}" ${sess ? 'disabled' : ''}>Zeitfahren</button>
+            <div class="track-body">
+                <div class="times">
+                    <div class="rec"><label>Streckenrekord</label><b class="mono">${fmt(t.record && t.record.time)}</b><small>${t.record ? esc(t.record.name) : ''}</small></div>
+                    <div class="pb"><label>Deine Bestzeit</label><b class="mono">${fmt(t.pb)}</b></div>
+                </div>
+                ${lobbyHtml}
+                <div class="actions">${raceBtn}</div>
+                <div class="actions">${ghostSel}<span class="grow"></span>
+                    <button class="btn ghost" data-act="tt" data-track="${esc(t.id)}" ${sess ? 'disabled' : ''}>⏱ Zeitfahren${s.ttFee > 0 ? ' · ' + money(s.ttFee) : ''}</button>
+                </div>
             </div>
         </div>`;
     }).join('');
@@ -193,7 +228,7 @@ function renderProfile() {
         <div class="profile-head">
             <div class="rating-big">${p.rating}</div>
             <div>
-                <div style="font-size:20px;font-weight:700">${esc(p.name)}</div>
+                <div class="pname">${esc(p.name)}</div>
                 <div>${tierBadge(p.rating)} <span style="color:var(--muted);font-size:12px">Höchst-Rating ${p.peak_rating}</span></div>
                 <div class="tier-bar"><div style="width:${pct}%;background:${t.color}"></div></div>
                 <div style="color:var(--muted);font-size:11px;margin-top:4px">${next ? `Nächste Stufe: ${esc(next.name)} ab ${next.min}` : 'Höchste Stufe erreicht'}</div>
@@ -336,6 +371,10 @@ function showHud(d) {
 
 function hudTick(d) {
     $('#hud-speed').textContent = d.speed;
+    // Tacho-Bogen füllen, Vollausschlag bei 130 km/h
+    const gl = $('#gauge-arc').getTotalLength ? $('#gauge-arc').getTotalLength() : 377;
+    const arc = Math.min(1, d.speed / 130) * gl;
+    $('#gauge-arc').style.strokeDasharray = `${arc.toFixed(1)} 999`;
     $('#hud-lap').textContent = d.type === 'race' ? `${d.lap}/${d.laps}` : `${d.lap}`;
     $('#hud-cp').textContent = `${d.cp}/${d.cps}`;
     if (d.lapTime !== null && d.lapTime !== undefined) $('#hud-laptime').textContent = fmt(d.lapTime);
