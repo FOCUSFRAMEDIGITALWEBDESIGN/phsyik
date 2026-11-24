@@ -14,8 +14,38 @@ Config.InteractDistance = 2.0
 Config.MarkerDrawDistance = 25.0
 
 -- Kart-Modelle (zufällig gewählt)
-Config.KartModels = { 'veto2', 'veto' }
+Config.KartModels = { 'veto2' }   -- ein Modell = gleiche Bedingungen für alle
 Config.KartPlate = 'KART'
+
+-- Eigenes Kart "KB-1": diese Werte setzt das Skript beim Spawn direkt auf jedes Kart.
+-- Damit gilt die Physik auch dann, wenn die handling.meta nicht greift.
+Config.Kart = {
+    Enabled   = true,
+    Name      = 'KB-1 Rennkart',
+    MaxSpeed  = 95.0,          -- km/h Höchstgeschwindigkeit (für alle gleich = faire Rennen)
+    Handling  = {              -- CHandlingData-Werte (float)
+        fMass                     = 230.0,
+        fInitialDragCoeff         = 6.0,
+        fInitialDriveForce        = 0.32,
+        fInitialDriveMaxFlatVel   = 118.0,
+        fDriveInertia             = 1.4,
+        fBrakeForce               = 0.9,
+        fBrakeBiasFront           = 0.4,
+        fSteeringLock             = 38.0,
+        fTractionCurveMax         = 2.65,
+        fTractionCurveMin         = 2.35,
+        fTractionCurveLateral     = 20.0,
+        fLowSpeedTractionLossMult = 0.25,
+        fTractionLossMult         = 0.6,
+        fSuspensionForce          = 3.6,
+        fAntiRollBarForce         = 1.6,
+        fCollisionDamageMult      = 0.2,
+        fDeformationDamageMult    = 0.1
+    },
+    -- Optik: Farben (GTA-Farbindex), Startnummern-Kennzeichen
+    Colors    = { primary = 89, secondary = 0, pearl = 89, wheels = 0 }, -- Racing-Gelb / Schwarz
+    NumberPlates = true         -- Kennzeichen zeigt "KB-<Startplatz>"
+}
 
 -- Rennen
 Config.Race = {

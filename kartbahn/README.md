@@ -110,3 +110,14 @@ Modelle, die es in deiner Spielversion nicht gibt, werden automatisch übersprun
 ![Rangliste](docs/ui-rangliste.png)
 ![Bestzeiten](docs/ui-bestzeiten.png)
 ![Letzte Rennen](docs/ui-letzte-rennen.png)
+
+## Eigenes Kart „KB-1“
+Basis ist das Modell `veto2`, die Fahrphysik ist komplett eigen:
+- **`data/meta/handling.meta`**: wird als Mod-Datei (`data_file 'HANDLING_FILE'`) beim Verbinden an alle Spieler geladen.
+- **`Config.Kart` in `config.lua`**: dieselben Werte setzt das Skript beim Spawn zusätzlich direkt aufs Kart.
+  Das ist die Absicherung, falls die Meta nicht greift. Zum Feintuning reicht es, die `config.lua` zu ändern.
+- Höchstgeschwindigkeit (Standard 95 km/h), Racing-Gelb/Schwarz, Kennzeichen mit Startnummer („KB-1“ … „KB-8“).
+- Leichter (230 kg), tiefer Schwerpunkt, viel Grip, wenig Schaden – fährt wie ein echtes Leihkart.
+
+Wichtig: Die `handling.meta` ändert das Handling **aller** `veto2` auf dem Server.
+Wer das nicht möchte, entfernt die Zeile `data_file` im `fxmanifest.lua`; die Werte aus der Config gelten trotzdem.

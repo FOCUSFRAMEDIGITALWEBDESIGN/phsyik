@@ -25,6 +25,7 @@ server_scripts {
 
 client_scripts {
     'client/main.lua',
+    'client/kart.lua',
     'client/track.lua',
     'client/race.lua',
     'client/editor.lua'
@@ -33,6 +34,7 @@ client_scripts {
 ui_page 'html/index.html'
 
 files {
+    'data/meta/handling.meta',
     'html/index.html',
     'html/style.css',
     'html/app.js'
@@ -41,3 +43,6 @@ files {
 dependencies {
     'oxmysql'
 }
+
+-- Eigenes Kart-Handling als Mod-Datei (wird beim Verbinden geladen)
+data_file 'HANDLING_FILE' 'data/meta/handling.meta'

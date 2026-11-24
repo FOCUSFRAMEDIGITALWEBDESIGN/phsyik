@@ -62,6 +62,7 @@ RegisterNetEvent('kartbahn:prepare', function(d)
         TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
         SetVehicleEngineOn(veh, true, true, false)
         SetVehRadioStation(veh, 'OFF')
+        ApplyKartSetup(veh, d.slot) -- eigene Kart-Physik
     end
     Wait(300)
     DoScreenFadeIn(500)
