@@ -1,0 +1,38 @@
+KARTBAHN – SCHNELLANLEITUNG
+===========================
+
+1. Ordner "kartbahn" nach  resources/  kopieren
+   (z. B. resources/[kartbahn]/kartbahn).
+
+2. Datenbank: sql/kartbahn.sql importieren (HeidiSQL/phpMyAdmin).
+   Die Tabellen werden beim Start zusätzlich automatisch angelegt.
+
+3. server.cfg (NACH oxmysql und ggf. es_extended / qb-core):
+
+       ensure oxmysql
+       ensure kartbahn
+       add_ace group.admin kart.admin allow
+
+   OneSync muss aktiv sein.
+
+4. Server neu starten. Blip "Kartbahn" am Flughafen (LSIA), am gelben Marker E drücken.
+
+5. Optional anpassen: config.lua (Preise, Zeiten, Modi, Boost, Farben, Texte ...).
+
+BEFEHLE
+  Spieler:  /kartleave  – Rennen / Zeitfahren / Lobby verlassen
+  Editor (kart.admin):
+    /kartedit [id]   Editor starten / Strecke laden
+    /kartcp [breite] Checkpoint (CP 1 = Start/Ziel)
+    /kartgrid        Startplatz (max. 8, Pole zuerst)
+    /kartprop <model> Prop setzen
+    /kartboost       Boost-Feld
+    /kartitem        Item-Box
+    /kartpodium      Siegerpodest
+    /kartundo  /kartlaps <n>  /kartbarriers
+    /kartsave <id> [Name]   /kartcancel
+
+TASTEN IM RENNEN
+  Shift = Boost (Fun-Rennen) · G = Item benutzen · Zuschauen: ← → wechseln, Backspace beenden
+
+Alle Details: README.md
