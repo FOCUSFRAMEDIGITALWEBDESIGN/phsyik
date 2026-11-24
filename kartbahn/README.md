@@ -164,3 +164,11 @@ Die Strecke „LSIA Kartring“ liegt 3 m über dem Boden auf einer durchgehende
 (Modell aus `Config.Platform.Models`, Größe wird im Spiel automatisch gemessen) – dadurch überall gleicher Grip.
 - Wer runterfällt, wird automatisch auf den letzten Checkpoint zurückgesetzt (Runde ungültig), manuell mit `/kartreset`
 - Im Editor: `/kartplatform [höhe]` schaltet die angehobene Fahrbahn für eine Strecke an/aus
+
+## Optik
+- **Fahrbahn-Markierungen** werden direkt auf den Asphalt gezeichnet (keine Objekte): weiße Randlinien,
+  rot-weiße Curbs an jeder Kurveninnenseite, karierte Start-/Ziellinie und gelbe Startboxen.
+  Werden automatisch aus den Checkpoints berechnet – gilt also auch für jede Editor-Strecke (`Config.Paint`).
+- **Flutlicht** an jedem 4. Checkpoint, das nachts (20–6 Uhr) die Strecke wirklich ausleuchtet (`Config.Lights`).
+
+![Streckenplan](docs/streckenplan.png)

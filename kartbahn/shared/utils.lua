@@ -81,6 +81,10 @@ function KB.BuildObjectList(track)
             list[#list + 1] = { model = Config.Track.ConeModel, x = r.x, y = r.y, z = r.z, h = 0.0 }
         end
     end
+    -- Flutlichter hinter der Bande
+    for _, l in ipairs(KB.LightSpots(track)) do
+        list[#list + 1] = { model = Config.Lights.Model, x = l.x, y = l.y, z = l.z, h = l.h }
+    end
     for _, p in ipairs(track.props or {}) do
         list[#list + 1] = { model = p.model, x = p.x, y = p.y, z = p.z, h = p.h or 0.0 }
     end
@@ -139,4 +143,25 @@ function KB.SectorEnds(track)
     for k = 1, c - 1 do ends[#ends + 1] = math.floor(k * n / c) + 1 end
     ends[#ends + 1] = 1
     return ends
+end
+
+-- Positionen der Flutlichter (abwechselnd links/rechts, Blick zur Strecke)
+function KB.LightSpots(track)
+    local out = {}
+    if not Config.Lights.Enabled then return out end
+    local cps = track.checkpoints or {}
+    if #cps < 3 then return out end
+    local side = 1
+    for i = 2, #cps, Config.Lights.Every do
+        local dx, dy = KB.CpDirection(cps, i)
+        local nx, ny = -dy, dx
+        local d = cps[i].w / 2 + Config.Track.BarrierOffset + Config.Lights.Offset
+        if track.platform then d = math.min(d, cps[i].w / 2 + Config.Platform.Margin - 0.8) end
+        local x, y = cps[i].x + nx * d * side, cps[i].y + ny * d * side
+        -- Lampe schaut zur Strecke
+        local h = math.deg(math.atan(nx * side, -ny * side))
+        out[#out + 1] = { x = x, y = y, z = cps[i].z, h = h, tx = cps[i].x, ty = cps[i].y }
+        side = -side
+    end
+    return out
 end

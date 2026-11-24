@@ -350,3 +350,34 @@ Config.Platform = {
 }
 Config.Text.reset_done   = 'Zurückgesetzt – Runde ungültig.'
 Config.Text.ed_platform  = 'Angehobene Strecke: %s'
+
+-- Optik: Markierungen direkt auf der Fahrbahn (gezeichnet, keine Objekte) und Flutlicht
+Config.Paint = {
+    Enabled      = true,
+    DrawDistance = 160.0,  -- nur in der Nähe zeichnen (Performance)
+    Lift         = 0.03,   -- Abstand über der Fahrbahn gegen Flackern
+    EdgeWidth    = 0.25,   -- weiße Randlinie
+    CurbWidth    = 1.1,    -- rot-weiße Curbs in Kurven
+    CurbSegment  = 1.2,
+    CurbAngle    = 18.0,   -- ab diesem Knick gilt ein Checkpoint als Kurve
+    CheckerSize  = 1.0,    -- Karo-Größe der Start-/Ziellinie
+    GridBox      = { w = 2.0, l = 3.2, line = 0.15 },
+    Colors = {
+        edge  = { 240, 240, 240, 230 },
+        red   = { 210, 30, 30, 255 },
+        white = { 240, 240, 240, 255 },
+        black = { 15, 15, 15, 255 },
+        grid  = { 255, 204, 0, 230 }
+    }
+}
+
+Config.Lights = {
+    Enabled   = true,
+    Every     = 4,         -- an jedem n-ten Checkpoint ein Flutlicht (abwechselnd links/rechts)
+    Model     = 'prop_worklight_03b',
+    Offset    = 4.0,       -- Abstand hinter der Bande
+    Range     = 40.0,
+    Intensity = 6.0,
+    Color     = { 255, 244, 214 },
+    NightFrom = 20, NightTo = 6
+}

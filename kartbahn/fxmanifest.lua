@@ -32,6 +32,7 @@ client_scripts {
     'client/spectate.lua',
     'client/podium.lua',
     'client/track.lua',
+    'client/paint.lua',
     'client/race.lua',
     'client/editor.lua'
 }
