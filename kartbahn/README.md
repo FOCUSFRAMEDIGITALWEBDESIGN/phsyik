@@ -103,3 +103,6 @@ Die Standardstrecke ist komplett ausgebaut (alles lokal gespawnt, für jeden Spi
 - Boxengasse mit Zelten und Flutlicht neben dem Anmeldepunkt
 
 Modelle, die es in deiner Spielversion nicht gibt, werden automatisch übersprungen.
+
+## Vorschau
+![Anmelde-Menü](docs/ui-anmeldung.png)
