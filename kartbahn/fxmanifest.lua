@@ -19,6 +19,7 @@ server_scripts {
     'server/elo.lua',
     'server/tracks.lua',
     'server/main.lua',
+    'server/features.lua',
     'server/race.lua',
     'server/editor.lua'
 }
@@ -26,6 +27,10 @@ server_scripts {
 client_scripts {
     'client/main.lua',
     'client/kart.lua',
+    'client/features.lua',
+    'client/ghost.lua',
+    'client/spectate.lua',
+    'client/podium.lua',
     'client/track.lua',
     'client/race.lua',
     'client/editor.lua'

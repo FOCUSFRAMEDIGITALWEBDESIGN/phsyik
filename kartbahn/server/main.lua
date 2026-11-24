@@ -32,10 +32,12 @@ RegisterCallback('getMenu', function(src)
             id = id, name = t.name, laps = t.laps, length = KB.TrackLength(t), grid = #t.grid,
             record = rec and { time = rec.time, name = rec.name } or nil,
             pb = pbs[id],
-            lobby = Race.GetLobbyInfo(id)
+            lobby = Race.GetLobbyInfo(id, src)
         }
     end
     table.sort(tracks, function(a, b) return a.name < b.name end)
+    Features.PayPending(src, ident)
+    local custom = Features.GetCustom(ident)
     return {
         tracks = tracks,
         profile = profile,
@@ -47,8 +49,17 @@ RegisterCallback('getMenu', function(src)
             prizes = Bridge.IsFree() and { 0, 0, 0 } or Config.Race.Prizes,
             minLaps = Config.Race.MinLaps, maxLaps = Config.Race.MaxLaps,
             minPlayers = Config.Race.MinPlayers, maxPlayers = Config.Race.MaxPlayers,
-            framework = Bridge.fw
-        }
+            framework = Bridge.fw,
+            bets = Features.BetsEnabled(), betMin = Config.Bets.Min, betMax = Config.Bets.Max,
+            ghost = Config.Ghost.Enabled, spectate = Config.Spectate.Enabled, season = Config.Season.Enabled
+        },
+        modes = Config.Modes,
+        custom = custom,
+        paints = Config.KartPaints,
+        achievements = Config.Achievements,
+        unlocked = Features.GetAchievements(ident),
+        running = Race.GetRunningRaces(),
+        me = src
     }
 end)
 
@@ -66,6 +77,12 @@ RegisterCallback('getRecent', function()
     for _, r in ipairs(rows) do
         local t = Tracks.Get(r.track)
         r.trackName = t and t.name or r.track
+        -- neues Format: { mode, results, teams }
+        if type(r.results) == 'table' and r.results.results then
+            local m = KB.GetMode(r.results.mode)
+            r.modeLabel = m and m.label or nil
+            r.results = r.results.results
+        end
     end
     return { rows = rows }
 end)

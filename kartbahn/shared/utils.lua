@@ -105,3 +105,38 @@ function KB.TrackLength(track)
     end
     return math.floor(len)
 end
+
+-- Modus-Definition holen
+function KB.GetMode(id)
+    for _, m in ipairs(Config.Modes) do if m.id == id then return m end end
+    return Config.Modes[1]
+end
+
+-- Item-Boxen: eigene aus der Strecke oder automatisch an jedem n-ten Checkpoint
+function KB.GetItemBoxes(track)
+    if track.itemBoxes and #track.itemBoxes > 0 then return track.itemBoxes end
+    local list, cps = {}, track.checkpoints or {}
+    for i = 3, #cps, Config.Items.AutoEvery do
+        list[#list + 1] = { x = cps[i].x, y = cps[i].y, z = cps[i].z }
+    end
+    return list
+end
+
+-- Position des Siegerpodests (eigene oder seitlich von Start/Ziel)
+function KB.GetPodium(track)
+    if track.podium then return track.podium end
+    local cps = track.checkpoints
+    local dx, dy = KB.CpDirection(cps, 1)
+    local o = Config.Podium.Offset
+    local cp = cps[1]
+    return { x = cp.x + dy * o, y = cp.y - dx * o, z = cp.z, h = math.deg(math.atan(dy, dx)) } -- Blick zur Strecke
+end
+
+-- Sektorgrenzen: Checkpoint-Index, an dem ein Sektor endet (letzter Sektor endet an CP 1)
+function KB.SectorEnds(track)
+    local n, c = #track.checkpoints, Config.Sectors.Count
+    local ends = {}
+    for k = 1, c - 1 do ends[#ends + 1] = math.floor(k * n / c) + 1 end
+    ends[#ends + 1] = 1
+    return ends
+end

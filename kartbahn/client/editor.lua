@@ -28,6 +28,7 @@ RegisterNetEvent('kartbahn:editorStart', function(existing, id)
         id = id ~= '' and id or nil, name = id ~= '' and id or 'Neue Strecke', laps = 3,
         minLap = Config.AntiCheat.MinLapTime, autoBarriers = true, checkpoints = {}, grid = {}, props = {}
     }
+    t.boostPads, t.itemBoxes = t.boostPads or {}, t.itemBoxes or {}
     E = { track = t, history = {}, objs = {} }
     msg('ed_start', t.name or id)
     rebuildPreview()
@@ -56,6 +57,19 @@ RegisterNetEvent('kartbahn:editorStart', function(existing, id)
                     80, 200, 255, 160, false, false, 2, false, nil, nil, false)
                 local rad = math.rad(g.h)
                 DrawLine(g.x, g.y, g.z + 0.5, g.x - math.sin(rad) * 3.0, g.y + math.cos(rad) * 3.0, g.z + 0.5, 80, 200, 255, 255)
+            end
+            -- Boost-Felder, Item-Boxen, Podest
+            for _, b in ipairs(tr.boostPads) do
+                DrawMarker(30, b.x, b.y, b.z + 0.05, 0.0, 0.0, 0.0, -90.0, 0.0, b.h, 3.0, 3.0, 3.0,
+                    0, 200, 255, 160, false, false, 2, false, nil, nil, false)
+            end
+            for _, b in ipairs(tr.itemBoxes) do
+                DrawMarker(32, b.x, b.y, b.z + 1.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.4, 1.4, 1.4,
+                    255, 204, 0, 200, true, true, 2, true, nil, nil, false)
+            end
+            if tr.podium then
+                DrawMarker(1, tr.podium.x, tr.podium.y, tr.podium.z - 0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 2.0, 1.2,
+                    255, 204, 0, 120, false, false, 2, false, nil, nil, false)
             end
             BeginTextCommandDisplayHelp('STRING')
             AddTextComponentSubstringPlayerName(KB.T('ed_help', #cps, #tr.grid, #tr.props, tr.laps,
@@ -116,9 +130,44 @@ RegisterCommand('kartundo', function()
     if not last then return msg('ed_nothing') end
     if last == 'cp' then table.remove(E.track.checkpoints)
     elseif last == 'grid' then table.remove(E.track.grid)
-    elseif last == 'prop' then table.remove(E.track.props) end
+    elseif last == 'prop' then table.remove(E.track.props)
+    elseif last == 'boost' then table.remove(E.track.boostPads)
+    elseif last == 'item' then table.remove(E.track.itemBoxes)
+    elseif last == 'podium' then E.track.podium = E.podiumPrev end
     msg('ed_undo', last)
     rebuildPreview()
+end, false)
+
+-- Boost-Feld in Blickrichtung
+RegisterCommand('kartboost', function()
+    if not E then return msg('ed_not_active') end
+    local ped = PlayerPedId()
+    local veh = GetVehiclePedIsIn(ped, false)
+    local ent = veh ~= 0 and veh or ped
+    local c = GetEntityCoords(ent)
+    table.insert(E.track.boostPads, { x = c.x, y = c.y, z = groundZ(c), h = GetEntityHeading(ent) })
+    table.insert(E.history, 'boost')
+    msg('ed_boost', #E.track.boostPads)
+end, false)
+
+-- Item-Box (nur im Item-Modus aktiv; ohne eigene Boxen werden sie automatisch verteilt)
+RegisterCommand('kartitem', function()
+    if not E then return msg('ed_not_active') end
+    local c = GetEntityCoords(PlayerPedId())
+    table.insert(E.track.itemBoxes, { x = c.x, y = c.y, z = groundZ(c) })
+    table.insert(E.history, 'item')
+    msg('ed_item', #E.track.itemBoxes)
+end, false)
+
+-- Siegerpodest (Blickrichtung = Richtung, in die die Fahrer schauen)
+RegisterCommand('kartpodium', function()
+    if not E then return msg('ed_not_active') end
+    local ped = PlayerPedId()
+    local c = GetEntityCoords(ped)
+    E.podiumPrev = E.track.podium
+    E.track.podium = { x = c.x, y = c.y, z = groundZ(c), h = GetEntityHeading(ped) }
+    table.insert(E.history, 'podium')
+    msg('ed_podium')
 end, false)
 
 RegisterCommand('kartlaps', function(_, args)
@@ -166,5 +215,8 @@ CreateThread(function()
     TriggerEvent('chat:addSuggestion', '/kartbarriers', 'Automatische Begrenzung an/aus')
     TriggerEvent('chat:addSuggestion', '/kartsave', 'Strecke speichern', { { name = 'id', help = 'Strecken-ID' }, { name = 'name', help = 'Anzeigename' } })
     TriggerEvent('chat:addSuggestion', '/kartcancel', 'Editor abbrechen')
+    TriggerEvent('chat:addSuggestion', '/kartboost', 'Boost-Feld setzen')
+    TriggerEvent('chat:addSuggestion', '/kartitem', 'Item-Box setzen')
+    TriggerEvent('chat:addSuggestion', '/kartpodium', 'Siegerpodest setzen')
     TriggerEvent('chat:addSuggestion', '/kartleave', 'Rennen / Zeitfahren verlassen')
 end)

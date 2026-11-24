@@ -89,7 +89,7 @@ end)
 CreateThread(function()
     while true do
         local sleep = 1000
-        if not MenuOpen and not IsRacing() and not IsEditing() then
+        if not MenuOpen and not IsRacing() and not IsEditing() and not IsSpectating() then
             local pc = GetEntityCoords(PlayerPedId())
             for _, loc in ipairs(Config.Locations) do
                 local d = #(pc - loc.coords)
@@ -116,7 +116,7 @@ RegisterNUICallback('close', function(_, cb) CloseMenu() cb('ok') end)
 RegisterNUICallback('refresh', function(_, cb) refreshMenu() cb('ok') end)
 
 RegisterNUICallback('joinRace', function(d, cb)
-    local res = ServerCallback('joinRace', d.track, d.laps) or {}
+    local res = ServerCallback('joinRace', d.track, d.laps, d.mode) or {}
     if res.msg then Notify(res.msg, res.ok and 'success' or 'error') end
     refreshMenu()
     cb(res)
@@ -130,7 +130,7 @@ RegisterNUICallback('leaveLobby', function(_, cb)
 end)
 
 RegisterNUICallback('startTT', function(d, cb)
-    local res = ServerCallback('startTT', d.track) or {}
+    local res = ServerCallback('startTT', d.track, d.ghost) or {}
     if res.msg then Notify(res.msg, res.ok and 'success' or 'error') end
     if res.ok then CloseMenu() end
     cb(res)
@@ -139,6 +139,22 @@ end)
 RegisterNUICallback('getLeaderboard', function(_, cb) cb(ServerCallback('getLeaderboard') or { rows = {} }) end)
 RegisterNUICallback('getTrackTimes', function(d, cb) cb(ServerCallback('getTrackTimes', d.track) or { rows = {} }) end)
 RegisterNUICallback('getRecent', function(_, cb) cb(ServerCallback('getRecent') or { rows = {} }) end)
+RegisterNUICallback('getSeason', function(_, cb) cb(ServerCallback('getSeason') or { rows = {} }) end)
+
+RegisterNUICallback('placeBet', function(d, cb)
+    local res = ServerCallback('placeBet', d.track, d.target, d.amount) or {}
+    if res.msg then Notify(res.msg, res.ok and 'success' or 'error') end
+    refreshMenu()
+    cb(res)
+end)
+
+RegisterNUICallback('saveCustom', function(d, cb)
+    local res = ServerCallback('saveCustom', d.paint, d.number) or {}
+    if res.msg then Notify(res.msg, res.ok and 'success' or 'error') end
+    refreshMenu()
+    cb(res)
+end)
+
 RegisterNUICallback('closeResult', function(_, cb) SetNuiFocus(false, false) cb('ok') end)
 
 AddEventHandler('onResourceStop', function(res)

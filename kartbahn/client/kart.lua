@@ -1,5 +1,5 @@
 -- Eigenes Kart "KB-1": Physik, Tempolimit und Optik beim Spawn setzen
-function ApplyKartSetup(veh, slot)
+function ApplyKartSetup(veh, number, color)
     local k = Config.Kart
     if not k or not k.Enabled or not DoesEntityExist(veh) then return end
     for field, value in pairs(k.Handling) do
@@ -8,11 +8,11 @@ function ApplyKartSetup(veh, slot)
     SetVehicleMaxSpeed(veh, k.MaxSpeed / 3.6)
     ModifyVehicleTopSpeed(veh, 1.0)
     SetVehicleModKit(veh, 0)
-    SetVehicleColours(veh, k.Colors.primary, k.Colors.secondary)
+    SetVehicleColours(veh, color or k.Colors.primary, k.Colors.secondary)
     SetVehicleExtraColours(veh, k.Colors.pearl, k.Colors.wheels)
     SetVehicleDirtLevel(veh, 0.0)
-    if k.NumberPlates and slot then
-        SetVehicleNumberPlateText(veh, ('KB-%d'):format(slot))
+    if k.NumberPlates and number then
+        SetVehicleNumberPlateText(veh, ('KB-%d'):format(number))
     end
 end
 

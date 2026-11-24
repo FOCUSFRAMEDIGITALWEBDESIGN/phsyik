@@ -121,3 +121,32 @@ Basis ist das Modell `veto2`, die Fahrphysik ist komplett eigen:
 
 Wichtig: Die `handling.meta` ändert das Handling **aller** `veto2` auf dem Server.
 Wer das nicht möchte, entfernt die Zeile `data_file` im `fxmanifest.lua`; die Werte aus der Config gelten trotzdem.
+
+## Features (alle in `config.lua` einstellbar)
+| # | Feature | Kurz |
+|---|---|---|
+| 1 | **Boost-Knopf** | `Shift`: 2,5 s mehr Schub. Ladung wird **serverseitig** geführt und lädt sich auf |
+| 2 | **Windschatten** | Dicht hinter einem Gegner: mehr Leistung + Boost-Ladung (Server prüft die Positionen) |
+| 3 | **Perfekter Start** | Gas genau bei GO = Startboost, Gas in der letzten Countdown-Sekunde = Frühstart-Strafe |
+| 4 | **Drift-Boost** | Lange Drifts geben danach einen kurzen Schub (nur in Modi mit Boost) |
+| 5 | **Boost-Felder** | Blaue Pfeile auf der Strecke, im Editor mit `/kartboost` |
+| 6 | **Item-Modus** | Item-Boxen (Turbo, Ölpfütze, Schutzschild), `G` zum Benutzen; hinten gibt's bessere Items |
+| 7 | **Ghost** | Im Zeitfahren gegen die eigene Bestzeit oder den Streckenrekord fahren |
+| 8 | **Ausscheidung** | Nach jeder Runde fliegt der Letzte raus (Runden = Fahrer − 1) |
+| 9 | **Teamrennen** | Rot gegen Blau, Punkte nach Platz, Bonus für das Siegerteam |
+| 10 | **Meisterschaft** | Wochenwertung aus Ranked-Rennen, Preisgeld für die Top 3 (Auszahlung beim nächsten Menü-Öffnen) |
+| 11 | **Sektorzeiten** | 3 Sektoren, Live-Delta zur persönlichen Bestzeit (lila/grün/gelb) |
+| 12 | **Minimap** | Streckenumriss mit allen Fahrern im HUD |
+| 13 | **Zuschauen** | Laufende Rennen im Menü ansehen, `←`/`→` Fahrer wechseln, `Backspace` beenden |
+| 14 | **Siegerpodest** | Top 3 auf dem Podest mit Konfetti und Kamerafahrt (Editor: `/kartpodium`) |
+| 15 | **Startampel** | Rote Lichter über der Startlinie, grün bei GO |
+| 16 | **Kart-Design** | Lackierung und Startnummer im Profil; besondere Farben ab bestimmter Stufe |
+| 17 | **Erfolge** | 12 Abzeichen im Profil |
+| 18 | **Wetten** | Zuschauer setzen in der Lobby auf einen Fahrer (Totalisator, nur mit ESX/QBCore) |
+
+**Renn-Modi** (wählt, wer die Lobby eröffnet): *Ranked* (zählt für Rating und Meisterschaft, ohne Boost/Items),
+*Fun-Rennen* (Boost + Items, ohne Rating), *Ausscheidung*, *Teamrennen*. Zeitfahren läuft ohne Boost, damit Bestzeiten fair bleiben.
+
+Zusätzliche Editor-Befehle: `/kartboost`, `/kartitem`, `/kartpodium`.
+
+![Rennanzeige](docs/ui-hud.png)

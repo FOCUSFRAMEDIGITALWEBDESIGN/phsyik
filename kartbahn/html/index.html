@@ -26,6 +26,7 @@
         <section class="page hidden" id="page-ranking">
             <div class="subtabs">
                 <button class="sub active" data-sub="rating">Rating Top 50</button>
+                <button class="sub" data-sub="season">Meisterschaft</button>
                 <button class="sub" data-sub="times">Bestzeiten</button>
                 <button class="sub" data-sub="recent">Letzte Rennen</button>
                 <select id="times-track" class="hidden"></select>
@@ -42,6 +43,7 @@
     <div id="hud" class="hidden">
         <div class="hud-main">
             <div class="hud-track" id="hud-track"></div>
+            <div class="hud-team hidden" id="hud-team"></div>
             <div class="hud-pos" id="hud-pos-wrap"><span id="hud-pos">1</span><small id="hud-count">/1</small></div>
             <div class="hud-grid">
                 <div><label>Runde</label><span id="hud-lap">1/3</span></div>
@@ -51,11 +53,36 @@
                 <div><label>Beste Runde</label><span id="hud-best" class="mono">--:--.---</span></div>
                 <div><label>Persönliche Bestzeit</label><span id="hud-pb" class="mono">--:--.---</span></div>
                 <div><label>Streckenrekord</label><span id="hud-record" class="mono">--:--.---</span></div>
+                <div><label>Delta</label><span id="hud-delta" class="mono">–</span></div>
             </div>
+            <div class="sectors" id="hud-sectors"></div>
+            <div class="hud-ghost hidden" id="hud-ghost"></div>
             <div class="hud-hint">/kartleave zum Verlassen</div>
         </div>
-        <div class="hud-speed"><span id="hud-speed">0</span><small>km/h</small></div>
+        <div class="hud-speed">
+            <div class="slip hidden" id="hud-slip">WINDSCHATTEN</div>
+            <div class="shield hidden" id="hud-shield">SCHILD</div>
+            <span id="hud-speed">0</span><small>km/h</small>
+            <div class="boost hidden" id="hud-boost">
+                <label>BOOST <kbd>Shift</kbd></label>
+                <div class="bar"><div id="hud-boost-fill"></div><i></i></div>
+            </div>
+        </div>
+        <div class="item-slot hidden" id="hud-item"><span id="hud-item-name">–</span><kbd>G</kbd></div>
         <div class="hud-table" id="hud-table"></div>
+        <svg class="minimap hidden" id="minimap" viewBox="0 0 200 200"></svg>
+    </div>
+
+    <!-- Zuschauer -->
+    <div id="spectate" class="hidden">
+        <div class="spec-box"><small>ZUSCHAUER · <span id="spec-track"></span></small><b id="spec-name">–</b><span id="spec-idx"></span></div>
+    </div>
+
+    <!-- Siegerpodest -->
+    <div id="podium" class="hidden">
+        <div class="pod p2"><small>2</small><b id="pod-2"></b></div>
+        <div class="pod p1"><small>1</small><b id="pod-1"></b></div>
+        <div class="pod p3"><small>3</small><b id="pod-3"></b></div>
     </div>
 
     <div id="countdown" class="hidden"></div>

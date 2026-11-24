@@ -36,6 +36,17 @@ function Tracks.Sanitize(t)
             out.props[#out.props + 1] = { model = p.model, x = num(p.x, 0.0), y = num(p.y, 0.0), z = num(p.z, 0.0), h = num(p.h, 0.0) }
         end
     end
+    -- Boost-Felder, Item-Boxen, Siegerpodest
+    out.boostPads, out.itemBoxes = {}, {}
+    for _, b in ipairs(t.boostPads or {}) do
+        out.boostPads[#out.boostPads + 1] = { x = num(b.x, 0.0), y = num(b.y, 0.0), z = num(b.z, 0.0), h = num(b.h, 0.0) }
+    end
+    for _, b in ipairs(t.itemBoxes or {}) do
+        out.itemBoxes[#out.itemBoxes + 1] = { x = num(b.x, 0.0), y = num(b.y, 0.0), z = num(b.z, 0.0) }
+    end
+    if type(t.podium) == 'table' then
+        out.podium = { x = num(t.podium.x, 0.0), y = num(t.podium.y, 0.0), z = num(t.podium.z, 0.0), h = num(t.podium.h, 0.0) }
+    end
     if #out.checkpoints < 3 or #out.grid < 1 then return nil end
     return out
 end

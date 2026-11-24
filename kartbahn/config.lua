@@ -158,3 +158,158 @@ Config.Text = {
     off            = 'aus',
     usage_save     = 'Benutzung: /kartsave <id> [Anzeigename]'
 }
+
+-- =====================================================================
+-- FEATURES
+-- =====================================================================
+
+-- Renn-Modi (wählt, wer die Lobby eröffnet)
+-- ranked = zählt für Elo/Meisterschaft, boost = Boost-Knopf + Drift-Boost, items = Item-Boxen
+Config.Modes = {
+    { id = 'ranked', label = 'Ranked',        ranked = true,  boost = false, items = false },
+    { id = 'fun',    label = 'Fun-Rennen',    ranked = false, boost = true,  items = true  },
+    { id = 'elim',   label = 'Ausscheidung',  ranked = false, boost = false, items = false },
+    { id = 'team',   label = 'Teamrennen',    ranked = false, boost = false, items = false }
+}
+Config.TimeTrialMode = { boost = false, items = false }  -- Zeitfahren: ohne Boost (faire Bestzeiten)
+
+-- 1) Boost-Knopf
+Config.Boost = {
+    Key          = 21,      -- INPUT_SPRINT (Shift / A)
+    Duration     = 2500,    -- ms pro Boost
+    Cost         = 50,      -- Ladung pro Boost (max. 100)
+    RechargeRate = 6,       -- Ladung pro Sekunde
+    StartCharge  = 50,
+    Power        = 2.2,     -- Motorleistungs-Multiplikator
+    ExtraSpeed   = 20.0     -- km/h über dem Tempolimit während des Boosts
+}
+
+-- 2) Windschatten
+Config.Slipstream = { Enabled = true, MinDist = 2.5, MaxDist = 14.0, MaxAngle = 12.0, Power = 1.25, BoostCharge = 4 }
+
+-- 3) Perfekter Start
+Config.PerfectStart = { Enabled = true, Window = 300, BoostTime = 1500, Power = 2.0, FalseStartPenalty = 1200 }
+
+-- 4) Drift-Boost (nur in Modi mit boost = true)
+Config.DriftBoost = { Enabled = true, MinAngle = 15.0, MinSpeed = 25.0, MinTime = 1.2, MaxBoost = 1500, Power = 1.8 }
+
+-- 5) Boost-Felder (pro Strecke im Editor mit /kartboost)
+Config.BoostPads = { Enabled = true, Radius = 3.0, Duration = 1200, Power = 2.0, Cooldown = 2000 }
+
+-- 6) Item-Modus
+Config.Items = {
+    Key         = 47,       -- INPUT_DETONATE (G) Item benutzen
+    Radius      = 3.0,
+    Respawn     = 5000,     -- ms bis eine Box für denselben Fahrer wieder verfügbar ist
+    AutoEvery   = 5,        -- ohne eigene Boxen: automatisch an jedem 5. Checkpoint
+    OilTime     = 20000,    -- Lebensdauer einer Ölpfütze
+    OilRadius   = 2.5,
+    SpinTime    = 1500,
+    ShieldTime  = 8000,
+    -- Gewichtung nach Platz (vorne eher Öl, hinten eher Boost)
+    Pool = {
+        front = { boost = 2, oil = 5, shield = 3 },
+        back  = { boost = 6, oil = 2, shield = 2 }
+    },
+    Labels = { boost = 'Turbo', oil = 'Ölpfütze', shield = 'Schutzschild' }
+}
+
+-- 7) Ghost im Zeitfahren
+Config.Ghost = { Enabled = true, Interval = 100, Alpha = 120, DefaultTarget = 'pb' } -- 'pb' oder 'record'
+
+-- 8) Ausscheidungsrennen: Runden = Fahrer - 1, nach jeder Runde fliegt der Letzte raus
+Config.Elimination = { FirstElimAfterLap = 1 }
+
+-- 9) Teamrennen
+Config.Teams = {
+    Points = { 10, 8, 6, 5, 4, 3, 2, 1 },
+    List = {
+        { name = 'Team Rot',  color = 27, hex = '#ef4444' },
+        { name = 'Team Blau', color = 64, hex = '#3b82f6' }
+    },
+    WinBonus = 500           -- Bonus-Bargeld für jedes Mitglied des Siegerteams
+}
+
+-- 10) Wöchentliche Meisterschaft (nur Ranked-Rennen)
+Config.Season = {
+    Enabled = true,
+    Points  = { 25, 18, 15, 12, 10, 8, 6, 4 },
+    Prizes  = { 25000, 15000, 7500 },   -- Saison-Preisgeld Platz 1-3 (wird beim nächsten Menü-Öffnen ausgezahlt)
+    Top     = 20
+}
+
+-- 11) Sektorzeiten
+Config.Sectors = { Count = 3 }
+
+-- 12) Minimap im HUD
+Config.Minimap = { Enabled = true }
+
+-- 13) Zuschauer-Modus
+Config.Spectate = { Enabled = true, Key_Next = 175, Key_Prev = 174, Key_Exit = 177 } -- Pfeil rechts/links, Backspace
+
+-- 14) Siegerpodest
+Config.Podium = { Enabled = true, Duration = 9000, Offset = 22.0 } -- Abstand seitlich von Start/Ziel, falls die Strecke kein "podium" hat
+
+-- 15) Startampel
+Config.StartLights = { Enabled = true, Height = 5.0, Spacing = 1.4 }
+
+-- 16) Kart-Design (min = Mindest-Rating zum Freischalten)
+Config.KartPaints = {
+    { id = 'yellow', name = 'Racing-Gelb',  color = 89,  min = 0 },
+    { id = 'black',  name = 'Schwarz',      color = 12,  min = 0 },
+    { id = 'white',  name = 'Weiß',         color = 111, min = 0 },
+    { id = 'red',    name = 'Rot',          color = 27,  min = 0 },
+    { id = 'blue',   name = 'Blau',         color = 64,  min = 0 },
+    { id = 'green',  name = 'Grün',         color = 53,  min = 0 },
+    { id = 'silver', name = 'Silber',       color = 4,   min = 1100 },
+    { id = 'gold',   name = 'Gold',         color = 158, min = 1250 },
+    { id = 'teal',   name = 'Platin-Türkis',color = 74,  min = 1400 },
+    { id = 'chrome', name = 'Diamant-Chrom',color = 120, min = 1600 },
+    { id = 'purple', name = 'Legenden-Lila',color = 145, min = 1800 }
+}
+
+-- 17) Erfolge
+Config.Achievements = {
+    { code = 'first_race',   name = 'Erste Runde',     desc = 'Erstes Rennen beendet' },
+    { code = 'first_win',    name = 'Sieger',          desc = 'Erstes Rennen gewonnen' },
+    { code = 'wins_10',      name = 'Seriensieger',    desc = '10 Rennen gewonnen' },
+    { code = 'podiums_10',   name = 'Stammgast',       desc = '10 Podestplätze' },
+    { code = 'races_50',     name = 'Dauerbrenner',    desc = '50 Rennen gefahren' },
+    { code = 'laps_100',     name = 'Kilometerfresser',desc = '100 gültige Runden' },
+    { code = 'record',       name = 'Rekordhalter',    desc = 'Einen Streckenrekord aufgestellt' },
+    { code = 'tier_gold',    name = 'Goldjunge',       desc = 'Stufe Gold erreicht' },
+    { code = 'tier_legend',  name = 'Legende',         desc = 'Stufe Legende erreicht' },
+    { code = 'elim_win',     name = 'Letzter Überlebender', desc = 'Ein Ausscheidungsrennen gewonnen' },
+    { code = 'team_win',     name = 'Teamplayer',      desc = 'Mit dem Team gewonnen' },
+    { code = 'season_champ', name = 'Meister',         desc = 'Eine Wochenmeisterschaft gewonnen' }
+}
+
+-- 18) Wetten (nur mit ESX/QBCore)
+Config.Bets = { Enabled = true, Min = 100, Max = 10000, HouseCut = 0.05 }
+
+-- Texte der Features
+Config.Text.boost_empty    = 'Boost leer!'
+Config.Text.perfect_start  = 'PERFEKTER START!'
+Config.Text.false_start    = 'Frühstart!'
+Config.Text.slipstream     = 'Windschatten'
+Config.Text.drift_boost    = 'Drift-Boost!'
+Config.Text.item_got       = 'Item: %s (G zum Benutzen)'
+Config.Text.item_oil_hit   = 'Ausgerutscht!'
+Config.Text.item_shield    = 'Schild aktiv'
+Config.Text.eliminated     = '%s ist ausgeschieden!'
+Config.Text.you_eliminated = 'Du bist ausgeschieden! Platz %s'
+Config.Text.team_assigned  = 'Du fährst für %s'
+Config.Text.team_won       = '%s gewinnt mit %s Punkten!'
+Config.Text.season_payout  = 'Meisterschafts-Preisgeld erhalten: %s $'
+Config.Text.achievement    = 'Erfolg freigeschaltet: %s'
+Config.Text.paint_locked   = 'Diese Lackierung ist noch gesperrt.'
+Config.Text.paint_saved    = 'Kart-Design gespeichert.'
+Config.Text.bet_placed     = 'Wette platziert: %s $ auf %s'
+Config.Text.bet_invalid    = 'Wette nicht möglich.'
+Config.Text.bet_won        = 'Wette gewonnen: %s $'
+Config.Text.bet_refund     = 'Wetteinsatz erstattet: %s $'
+Config.Text.spectate_help  = '~INPUT_CELLPHONE_RIGHT~ / ~INPUT_CELLPHONE_LEFT~ Fahrer wechseln  ~INPUT_CELLPHONE_CANCEL~ Beenden'
+Config.Text.spectate_none  = 'Kein laufendes Rennen.'
+Config.Text.ed_boost       = 'Boost-Feld %s gesetzt'
+Config.Text.ed_item        = 'Item-Box %s gesetzt'
+Config.Text.ed_podium      = 'Siegerpodest gesetzt'
