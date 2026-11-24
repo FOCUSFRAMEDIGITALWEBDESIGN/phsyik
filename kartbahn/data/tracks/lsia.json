@@ -1,6 +1,6 @@
 {
  "id": "lsia",
- "name": "LSIA Vorfeld",
+ "name": "LSIA Kartring",
  "laps": 3,
  "minLap": 25000,
  "autoBarriers": true,
@@ -206,5 +206,652 @@
    "h": 240.0
   }
  ],
- "props": []
+ "props": [
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1228.49,
+   "y": -3133.08,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1226.34,
+   "y": -3133.52,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1224.18,
+   "y": -3133.96,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1222.02,
+   "y": -3134.41,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1219.87,
+   "y": -3134.85,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1217.71,
+   "y": -3135.29,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1215.56,
+   "y": -3135.73,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1178.12,
+   "y": -3125.63,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1176.42,
+   "y": -3124.23,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1174.72,
+   "y": -3122.83,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1173.02,
+   "y": -3121.43,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1171.32,
+   "y": -3120.04,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1169.62,
+   "y": -3118.64,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1167.92,
+   "y": -3117.24,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1145.73,
+   "y": -3078.81,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1145.37,
+   "y": -3076.64,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1145.01,
+   "y": -3074.47,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1144.65,
+   "y": -3072.3,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1144.29,
+   "y": -3070.13,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1143.93,
+   "y": -3067.95,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1143.57,
+   "y": -3065.78,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1153.54,
+   "y": -3028.31,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1155.0,
+   "y": -3026.66,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1156.46,
+   "y": -3025.02,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1157.92,
+   "y": -3023.37,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1159.38,
+   "y": -3021.72,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1160.84,
+   "y": -3020.08,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1162.3,
+   "y": -3018.43,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1209.16,
+   "y": -2991.18,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1211.34,
+   "y": -2990.87,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1213.51,
+   "y": -2990.55,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1215.69,
+   "y": -2990.24,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1217.87,
+   "y": -2989.92,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1220.05,
+   "y": -2989.61,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1222.22,
+   "y": -2989.3,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1240.31,
+   "y": -3017.98,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1242.44,
+   "y": -3017.44,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1244.58,
+   "y": -3016.91,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1246.71,
+   "y": -3016.37,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1248.85,
+   "y": -3015.84,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1250.98,
+   "y": -3015.3,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1253.11,
+   "y": -3014.77,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1249.01,
+   "y": -2972.13,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1250.63,
+   "y": -2970.64,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1252.25,
+   "y": -2969.15,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1253.87,
+   "y": -2967.67,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1255.49,
+   "y": -2966.18,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1257.11,
+   "y": -2964.69,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1258.73,
+   "y": -2963.2,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1303.93,
+   "y": -2936.66,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1306.08,
+   "y": -2936.22,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1308.24,
+   "y": -2935.78,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1310.4,
+   "y": -2935.33,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1312.55,
+   "y": -2934.89,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1314.71,
+   "y": -2934.45,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1316.86,
+   "y": -2934.01,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1354.3,
+   "y": -2944.11,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1356.0,
+   "y": -2945.51,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1357.7,
+   "y": -2946.91,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1359.4,
+   "y": -2948.31,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1361.1,
+   "y": -2949.7,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1362.8,
+   "y": -2951.1,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1364.5,
+   "y": -2952.5,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1386.69,
+   "y": -2990.93,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1387.05,
+   "y": -2993.1,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1387.41,
+   "y": -2995.27,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1387.77,
+   "y": -2997.44,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1388.13,
+   "y": -2999.61,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1388.49,
+   "y": -3001.79,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1388.85,
+   "y": -3003.96,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1378.91,
+   "y": -3041.16,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1377.49,
+   "y": -3042.84,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1376.07,
+   "y": -3044.52,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1374.65,
+   "y": -3046.2,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1373.23,
+   "y": -3047.88,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1371.81,
+   "y": -3049.56,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_offroad_tyres02",
+   "x": -1370.39,
+   "y": -3051.24,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_tri_start_banner",
+   "x": -1298.04,
+   "y": -3080.0,
+   "z": 13.94,
+   "h": 60.0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1310.11,
+   "y": -3060.91,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1320.61,
+   "y": -3079.09,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1301.45,
+   "y": -3065.91,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1311.95,
+   "y": -3084.09,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1284.13,
+   "y": -3075.91,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1294.63,
+   "y": -3094.09,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1275.47,
+   "y": -3080.91,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_beachflag_01",
+   "x": -1285.97,
+   "y": -3099.09,
+   "z": 13.94,
+   "h": 0
+  },
+  {
+   "model": "prop_gazebo_03",
+   "x": -1298.15,
+   "y": -3104.19,
+   "z": 13.94,
+   "h": 240.0
+  },
+  {
+   "model": "prop_gazebo_03",
+   "x": -1305.94,
+   "y": -3099.69,
+   "z": 13.94,
+   "h": 240.0
+  },
+  {
+   "model": "prop_gazebo_03",
+   "x": -1313.74,
+   "y": -3095.19,
+   "z": 13.94,
+   "h": 240.0
+  },
+  {
+   "model": "prop_gazebo_03",
+   "x": -1321.53,
+   "y": -3090.69,
+   "z": 13.94,
+   "h": 240.0
+  },
+  {
+   "model": "prop_worklight_03b",
+   "x": -1320.13,
+   "y": -3082.26,
+   "z": 13.94,
+   "h": 150.0
+  },
+  {
+   "model": "prop_worklight_03b",
+   "x": -1285.49,
+   "y": -3102.26,
+   "z": 13.94,
+   "h": 150.0
+  }
+ ],
+ "barrierModel": "prop_barier_conc_01a",
+ "barrierSpacing": 2.6
 }

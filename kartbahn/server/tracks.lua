@@ -15,6 +15,9 @@ function Tracks.Sanitize(t)
         laps = math.max(Config.Race.MinLaps, math.min(Config.Race.MaxLaps, math.floor(num(t.laps, 3)))),
         minLap = math.max(5000, math.floor(num(t.minLap, Config.AntiCheat.MinLapTime))),
         autoBarriers = t.autoBarriers ~= false,
+        -- optional: eigenes Banden-Modell und Abstand pro Strecke
+        barrierModel = type(t.barrierModel) == 'string' and #t.barrierModel < 64 and t.barrierModel or nil,
+        barrierSpacing = tonumber(t.barrierSpacing) and math.max(1.0, tonumber(t.barrierSpacing)) or nil,
         checkpoints = {}, grid = {}, props = {}
     }
     if out.id == '' then return nil end

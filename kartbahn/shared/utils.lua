@@ -62,13 +62,13 @@ function KB.BuildObjectList(track)
                 local a, b = side[i], side[i == n and 1 or i + 1]
                 local dx, dy = b.x - a.x, b.y - a.y
                 local len = math.sqrt(dx * dx + dy * dy)
-                local count = math.max(1, math.floor(len / Config.Track.BarrierSpacing))
+                local count = math.max(1, math.floor(len / (track.barrierSpacing or Config.Track.BarrierSpacing)))
                 -- Objekt-X-Achse entlang der Linie ausrichten
                 local h = math.deg(math.atan(dy, dx))
                 for k = 0, count - 1 do
                     local t = (k + 0.5) / count
                     list[#list + 1] = {
-                        model = Config.Track.BarrierModel,
+                        model = track.barrierModel or Config.Track.BarrierModel,
                         x = a.x + dx * t, y = a.y + dy * t, z = a.z + (b.z - a.z) * t, h = h
                     }
                 end

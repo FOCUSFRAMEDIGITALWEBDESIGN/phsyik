@@ -74,7 +74,7 @@ und die echten Absperrungen.
 ## Streckenformat (`data/tracks/<id>.json`)
 ```json
 {
-  "id": "lsia", "name": "LSIA Vorfeld", "laps": 3, "minLap": 25000, "autoBarriers": true,
+  "id": "lsia", "name": "LSIA Kartring", "laps": 3, "minLap": 25000, "autoBarriers": true,
   "checkpoints": [ { "x": 0.0, "y": 0.0, "z": 0.0, "w": 14.0 } ],
   "grid":        [ { "x": 0.0, "y": 0.0, "z": 0.0, "h": 0.0 } ],
   "props":       [ { "model": "prop_flag_ls", "x": 0.0, "y": 0.0, "z": 0.0, "h": 0.0 } ]
@@ -94,3 +94,12 @@ auf dem LSIA-Vorfeld. Falls auf deinem Server dort Mapping steht, einfach mit de
 Alles in `config.lua`: Framework, Menüpunkte, Kart-Modelle, Lobby-Zeiten, Spielerzahl, Runden, Startgebühr,
 Preisgelder, DNF-Zeit, Elo (K, Startwert), Stufen, Anti-Cheat-Toleranzen, Absperrungs-Modelle/Abstände,
 Editor-Grenzen, Ranglisten-Größen und alle Texte.
+
+## Feste Kartbahn „LSIA Kartring“
+Die Standardstrecke ist komplett ausgebaut (alles lokal gespawnt, für jeden Spieler in der Nähe sichtbar):
+- durchgehende Betonbande links und rechts (`barrierModel`/`barrierSpacing` pro Strecke einstellbar)
+- Reifenstapel auf der Außenseite jeder Kurve, Pylonen an allen Checkpoints
+- Startportal über Start/Ziel, Fahnen an der Start-Geraden
+- Boxengasse mit Zelten und Flutlicht neben dem Anmeldepunkt
+
+Modelle, die es in deiner Spielversion nicht gibt, werden automatisch übersprungen.
